@@ -77,6 +77,8 @@ const Sphere = () => {
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [focusedCalcBlock, setFocusedCalcBlock] = useState(null); // 'bottom' | 'top' | null
   const [focusedStep3, setFocusedStep3] = useState(false);
+  const [faceInputsVisible, setFaceInputsVisible] = useState(false);
+  const [face1Input, setFace1Input] = useState('');
 
   const shapeLibrary = [
     { id: 'circle', name: 'Circle', svg: '○', formula: 'πr²' },
@@ -966,6 +968,17 @@ const Sphere = () => {
                 </svg>
               </div>
               
+              {!showCalculations && !faceInputsVisible && (
+                <button
+                  onClick={() => { setFaceInputsVisible(true); }}
+                  className="flex items-center justify-center rounded-full"
+                  style={{ position: 'absolute', right: '30px', bottom: '30px', width: '56px', height: '56px', backgroundColor: '#FFA500', color: '#fff', pointerEvents: 'auto' }}
+                  aria-label="Forward"
+                >
+                  <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5l7 7-7 7"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+              )}
+
               {/* Calculations Section */}
               <div className="w-80 space-y-4" style={{ 
                 position: 'relative', 
@@ -982,8 +995,24 @@ const Sphere = () => {
                     <div className="space-y-4">
                       {/* Remove mascot image from here if present */}
                       
+                      {faceInputsVisible && (
+                        <div className="space-y-2">
+                          <h4 className="font-semibold text-gray-800 text-sm">Face 1:</h4>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="text"
+                              value={face1Input}
+                              onChange={(e) => setFace1Input(e.target.value)}
+                              className="w-24 px-2 py-1 text-xs border rounded border-gray-300"
+                              placeholder="?"
+                              style={{ pointerEvents: 'auto' }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                      
                       {/* Bottom Block Dimensions */}
-                      <div className="space-y-2">
+                      <div className="space-y-2" style={{ display: faceInputsVisible ? 'none' : 'block' }}>
                         <h4 className="font-semibold text-gray-800 text-sm">Bottom Block:</h4>
                         <div className="grid grid-cols-3 gap-2">
                           <div>
@@ -1054,7 +1083,7 @@ const Sphere = () => {
                       </div>
 
                       {/* Top Block Dimensions */}
-                      <div className="space-y-2">
+                      <div className="space-y-2" style={{ display: faceInputsVisible ? 'none' : 'block' }}>
                         <h4 className="font-semibold text-gray-800 text-sm">Top Block:</h4>
                         <div className="grid grid-cols-3 gap-2">
                           <div>
@@ -1167,7 +1196,23 @@ const Sphere = () => {
                           </div>
                         </div>
                         
-                        <div className={`mb-4 p-3 rounded text-sm ${
+                        {faceInputsVisible && (
+                          <div className="mb-4 p-3 rounded text-sm bg-blue-50 border border-blue-200">
+                            <h4 className="font-semibold text-gray-800 text-xs">Face 1</h4>
+                            <p className="text-xs text-gray-600 mb-2">Enter the area for face 1:</p>
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="text"
+                                value={face1Input}
+                                onChange={(e) => setFace1Input(e.target.value)}
+                                className="w-16 px-2 py-1 text-xs border rounded border-gray-300"
+                                placeholder="?"
+                                style={{ pointerEvents: 'auto' }}
+                              />
+                            </div>
+                          </div>
+                        )}
+                        <div style={{ display: faceInputsVisible ? 'none' : 'block' }} className={`mb-4 p-3 rounded text-sm ${
                           calculationInputStatus.step1Result === 'correct'
                             ? 'bg-green-50 border border-green-200'
                             : calculationStep >= 0
