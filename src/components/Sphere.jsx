@@ -792,28 +792,13 @@ const Sphere = () => {
           </div>
           {/* Flexi mascot just below the header and above the 3D shape, only on calculations page */}
           {isCustomShape && dimensionsCompleted && showCalculations && (
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start', margin: '32px 0 16px 0', paddingLeft: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start', margin: '32px 0 16px 0', paddingLeft: '15px' }}>
               <img src={import.meta.env.BASE_URL + 'Flexi_Teacher.png'} alt="Mascot teacher" style={{ width: 100, height: 'auto', display: 'block' }} />
-              <div style={{
-                background: 'white',
-                border: '2px solid #008542',
-                borderRadius: '16px',
-                padding: '20px 12px 90px 12px',
-                marginLeft: '16px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                fontSize: '1rem',
-                color: '#222',
-                maxWidth: 260,
-                position: 'relative',
-                minWidth: 200
-              }}>
-                <span style={{ fontWeight: 'bold', color: '#008542' }}>Use this calculator to help with your calculations!</span>
-              </div>
             </div>
           )}
           {/* Flexi mascot just below the header and above the 3D shape, only on dimensions input page (You Try page 1) */}
           {isCustomShape && !showCalculations && (
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', margin: '32px 0 16px 0' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start', margin: '32px 0 16px 0', paddingLeft: '15px' }}>
               <img src={import.meta.env.BASE_URL + 'Flexi_ThumbsUp.png'} alt="Mascot thumbs up" style={{ width: 100, height: 'auto', display: 'block' }} />
               <div style={{
                 background: 'white',
@@ -839,7 +824,11 @@ const Sphere = () => {
                 position: 'relative',
                 width: '100%',
                 height: '500px',
-                marginTop: showCalculations ? '-3.5rem' : '-6.5rem', // Shift container even further up
+                marginTop: showCalculations ? '-6rem' : '-9rem', // Move container 0.5rem further up
+                border: '2px solid #008542',
+                borderRadius: '16px',
+                padding: '16px',
+                boxSizing: 'border-box'
               }}
             >
               <div style={{ position: 'relative', width: '500px', height: '500px' }}>
@@ -969,10 +958,11 @@ const Sphere = () => {
                   {/* Dimension numbers for left/bottom rectangle */}
                   <text x="225" y="375" fill="#008542" fontSize="18" fontWeight="bold" textAnchor="middle">5</text> {/* length, front edge, both rectangles */}
                   <text x="110" y="205" fill="#008542" fontSize="18" fontWeight="bold" textAnchor="middle">3</text> {/* width, left/bottom rectangle, top back edge */}
-                  <text x="135" y="325" fill="#008542" fontSize="18" fontWeight="bold" textAnchor="middle">1</text> {/* height */}
+                  <text x="135" y="325" fill="#008542" fontSize="18" fontWeight="bold" textAnchor="middle">2</text> {/* height */}
                   <text x="95" y="320" fill="#008542" fontSize="18" fontWeight="bold" textAnchor="middle">7</text> {/* depth */}
                   {/* Dimension numbers for right/top rectangle */}
-                  <text x="325" y="300" fill="#008542" fontSize="18" fontWeight="bold" textAnchor="middle">4</text> {/* height, right/top rectangle, right side */}
+                  <text x="325" y="300" fill="transparent" fontSize="18" fontWeight="bold" textAnchor="middle"></text>
+                  <text x="235" y="275" fill="#008542" fontSize="18" fontWeight="bold" textAnchor="middle">2</text> {/* height of top block, left vertical edge parallel to '1' */}
                 </svg>
               </div>
               
@@ -1132,22 +1122,11 @@ const Sphere = () => {
                         >
                           Check
                         </button>
-
-                        {/* Forward arrow button to proceed to calculations page */}
-                        <div className="flex justify-end mt-4">
-                          <button
-                            className="flex items-center justify-center w-10 h-10 rounded-full bg-[#008542] text-white hover:bg-[#006b36] transition-colors"
-                            onClick={() => { setDimensionsCompleted(true); setShowCalculations(true); }}
-                            aria-label="Next"
-                          >
-                            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-                          </button>
-                        </div>
                       </div>
                     </div>
                   ) : !showCalculations ? (
                     <div className="space-y-3">
-                      <div className="p-2 bg-green-50 border border-green-200 rounded">
+                      <div className="p-2 bg-green-50 border border-green-200 rounded hidden">
                         <p className="text-sm text-green-700 font-semibold">✓ All dimensions correct!</p>
                         <p className="text-xs text-green-600 mt-1">
                           <span>Bottom: 7 × 3 × 1</span><br/>
@@ -1174,8 +1153,8 @@ const Sphere = () => {
                       {/* Flexi mascot under the header on calculations page */}
                       <div className="space-y-3">
                         {/* Dimension Labels - Only show on calculation page */}
-                        <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded">
-                          <h4 className="font-semibold text-green-800 text-sm mb-2">Dimensions:</h4>
+                        <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded hidden">
+                          <h4 className="font-semibold text-green-800 text-sm mb-2 hidden">Dimensions:</h4>
                           <div className="grid grid-cols-2 gap-3 text-xs">
                             <div>
                               <span className="font-medium text-green-700">Bottom Block:</span>
@@ -1222,14 +1201,14 @@ const Sphere = () => {
                           </div>
                         </div>
                         
-                        <div className={`mb-4 p-3 rounded text-sm ${
+                        <div className={`mb-4 p-3 rounded text-sm hidden ${
                           calculationInputStatus.step2Result === 'correct'
                             ? 'bg-green-50 border border-green-200'
                             : calculationStep >= 1
                               ? 'bg-blue-50 border border-blue-200'
                               : 'bg-gray-50'
                         }`}>
-                          <h4 className="font-semibold text-gray-800 text-xs">Step 2: Top Block</h4>
+                          <h4 className="font-semibold text-gray-800 text-xs hidden">Step 2: Top Block</h4>
                           <p className="text-xs text-gray-600 mb-2">2(lw + lh + wh)</p>
                           <div className="flex items-center gap-2">
                             <input
@@ -1256,14 +1235,14 @@ const Sphere = () => {
                           </div>
                         </div>
                         
-                        <div className={`mb-4 p-3 rounded text-sm ${
+                        <div className={`mb-4 p-3 rounded text-sm hidden ${
                           calculationInputStatus.step3Result === 'correct'
                             ? 'bg-green-50 border border-green-200'
                             : calculationStep >= 2
                               ? 'bg-blue-50 border border-blue-200'
                               : 'bg-gray-50'
                         }`}>
-                          <h4 className="font-semibold text-gray-800 text-xs">Step 3: Add Together</h4>
+                          <h4 className="font-semibold text-gray-800 text-xs hidden">Step 3: Add Together</h4>
                           <p className="text-xs text-gray-600 mb-2">Bottom block value + Top block value = </p>
                           <div className="flex items-center gap-2">
                             <input
@@ -1290,14 +1269,14 @@ const Sphere = () => {
                           </div>
                         </div>
                         
-                        <div className={`mb-4 p-3 rounded text-sm ${
+                        <div className={`mb-4 p-3 rounded text-sm hidden ${
                           calculationInputStatus.finalAnswer === 'correct'
                             ? 'bg-green-50 border border-green-200'
                             : calculationStep >= 3
                               ? 'bg-green-50 border border-green-200'
                               : 'bg-gray-50'
                         }`}>
-                          <h4 className="font-semibold text-gray-800 text-xs">Final Answer</h4>
+                          <h4 className="font-semibold text-gray-800 text-xs hidden">Final Answer</h4>
                           <p className="text-xs text-gray-600 mb-2">Total surface area = </p>
                           <div className="flex items-center gap-2">
                             <input
