@@ -78,7 +78,13 @@ const Sphere = () => {
   const [focusedCalcBlock, setFocusedCalcBlock] = useState(null); // 'bottom' | 'top' | null
   const [focusedStep3, setFocusedStep3] = useState(false);
   const [faceInputsVisible, setFaceInputsVisible] = useState(false);
-  const [face1Input, setFace1Input] = useState('');
+  const [currentFace, setCurrentFace] = useState(1); // 1 or 2 for now
+  const [faceInputs, setFaceInputs] = useState({ 1: '', 2: '' });
+  const [faceStatuses, setFaceStatuses] = useState({ 1: null, 2: null }); // 'correct' | 'incorrect' | null
+  // Highlight for Face-by-Face workflow
+  const [focusedFace1, setFocusedFace1] = useState(false);
+  // Highlight for Face 2 (backwards L side)
+  const [focusedFace2, setFocusedFace2] = useState(false);
 
   const shapeLibrary = [
     { id: 'circle', name: 'Circle', svg: '○', formula: 'πr²' },
@@ -97,6 +103,10 @@ const Sphere = () => {
         src: url('/fonts/ProximaNova-Regular.woff2') format('woff2');
         font-weight: normal;
         font-style: normal;
+      }
+      /* Apply Proxima Nova globally */
+      html, body, input, button, select, textarea, label, span, p, h1, h2, h3, h4, h5, h6 {
+        font-family: 'Proxima Nova', sans-serif !important;
       }
       @keyframes fadeIn {
         from {
@@ -785,12 +795,18 @@ const Sphere = () => {
     }
   }, [isCustomShape, dimensionsCompleted, showCalculations]);
 
+  const checkCurrentFace = () => {
+    const val = parseFloat(faceInputs[currentFace]);
+    const expected = currentFace === 1 ? 21 : 14; // Face1: 7x3, Face2: 7x2
+    setFaceStatuses(prev => ({ ...prev, [currentFace]: (!isNaN(val) && Math.abs(val - expected) < 0.0001) ? 'correct' : 'incorrect' }));
+  };
+
   return (
     <div className="bg-gray-100 p-8 min-h-screen">
       <Card className="w-full max-w-2xl mx-auto shadow-md bg-white">
         <div style={{ padding: '24px 24px 0 24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '1.75rem', fontWeight: 'bold', color: '#008542' }}>Surface Area of the 3D Staircase</span>
+            <span style={{ fontSize: '1.75rem', fontWeight: 600, color: '#008542' }}>Surface Area of the 3D Staircase</span>
           </div>
           {/* Flexi mascot just below the header and above the 3D shape, only on calculations page */}
           {isCustomShape && dimensionsCompleted && showCalculations && (
@@ -915,13 +931,13 @@ const Sphere = () => {
                   {/* Existing polygons for block faces, but no highlight logic now */}
                   <polygon
                     points="150,300 250,300 160,210 60,210"
-                    fill={focusedCalcBlock === 'bottom' || focusedStep3 ? 'rgba(89,83,240,0.18)' : 'transparent'}
+                    fill={focusedCalcBlock === 'bottom' || focusedStep3 || (focusedFace1 && currentFace === 1) ? 'rgba(89,83,240,0.18)' : 'transparent'}
                     stroke="none"
                     style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                   />
                   <polygon
                     points="150,350 250,350 250,300 150,300"
-                    fill={focusedCalcBlock === 'bottom' || focusedStep3 ? 'rgba(89,83,240,0.18)' : 'transparent'}
+                    fill={focusedCalcBlock === 'bottom' || focusedStep3 || (focusedFace2 && currentFace === 2) ? 'rgba(89,83,240,0.18)' : 'transparent'}
                     stroke="none"
                     style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                   />
@@ -940,7 +956,7 @@ const Sphere = () => {
                   />
                   <polygon
                     points="250,350 300,350 300,250 250,250"
-                    fill={focusedCalcBlock === 'top' || focusedStep3 ? 'rgba(89,83,240,0.18)' : 'transparent'}
+                    fill={focusedCalcBlock === 'top' || focusedStep3 || (focusedFace2 && currentFace === 2) ? 'rgba(89,83,240,0.18)' : 'transparent'}
                     stroke="none"
                     style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                   />
@@ -952,7 +968,7 @@ const Sphere = () => {
                   />
                   <polygon
                     points="210,260 210,160 160,160 160,260"
-                    fill={focusedCalcBlock === 'top' || focusedStep3 ? 'rgba(89,83,240,0.18)' : 'transparent'}
+                    fill={focusedCalcBlock === 'top' || focusedStep3 || (focusedFace2 && currentFace === 2) ? 'rgba(89,83,240,0.18)' : 'transparent'}
                     stroke="none"
                     style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                   />
@@ -968,15 +984,43 @@ const Sphere = () => {
                 </svg>
               </div>
               
-              {!showCalculations && !faceInputsVisible && (
-                <button
-                  onClick={() => { setFaceInputsVisible(true); }}
-                  className="flex items-center justify-center rounded-full"
-                  style={{ position: 'absolute', right: '30px', bottom: '30px', width: '56px', height: '56px', backgroundColor: '#FFA500', color: '#fff', pointerEvents: 'auto' }}
-                  aria-label="Forward"
-                >
-                  <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5l7 7-7 7"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                </button>
+              {!showCalculations && (
+                <>
+                  {/* Forward button (always visible). Active only on the first calculations page */}
+                  <button
+                    onClick={() => {
+                      if (!faceInputsVisible) {
+                        setFaceInputsVisible(true);
+                        setCurrentFace(1);
+                      } else if (currentFace === 1) {
+                        setCurrentFace(2);
+                      }
+                    }}
+                    className="flex items-center justify-center"
+                    style={{ position: 'absolute', right: '30px', bottom: '30px', width: '30px', height: '30px', backgroundColor: '#008542', color: '#fff', borderRadius: '6px', pointerEvents: 'auto' }}
+                    aria-label="Forward"
+                  >
+                    <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5l7 7-7 7"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </button>
+
+                  {/* Back button (always visible). Disabled on the first calculations page */}
+                  <button
+                    onClick={() => {
+                      if (faceInputsVisible) {
+                        if (currentFace === 2) {
+                          setCurrentFace(1);
+                        } else {
+                          setFaceInputsVisible(false);
+                        }
+                      }
+                    }}
+                    className="flex items-center justify-center"
+                    style={{ position: 'absolute', right: '70px', bottom: '30px', width: '30px', height: '30px', backgroundColor: '#008542', color: '#fff', borderRadius: '6px', opacity: faceInputsVisible ? 1 : 0.4, pointerEvents: faceInputsVisible ? 'auto' : 'none' }}
+                    aria-label="Back"
+                  >
+                    <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19l-7-7 7-7"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </button>
+                </>
               )}
 
               {/* Calculations Section */}
@@ -997,16 +1041,50 @@ const Sphere = () => {
                       
                       {faceInputsVisible && (
                         <div className="space-y-2">
-                          <h4 className="font-semibold text-gray-800 text-sm">Face 1:</h4>
+                          <h4 className="font-semibold text-gray-800 text-sm">{`Face ${currentFace}`}</h4>
                           <div className="flex items-center gap-2">
                             <input
                               type="text"
-                              value={face1Input}
-                              onChange={(e) => setFace1Input(e.target.value)}
-                              className="w-24 px-2 py-1 text-xs border rounded border-gray-300"
+                              value={faceInputs[currentFace]}
+                              onChange={(e) => setFaceInputs(prev => ({ ...prev, [currentFace]: e.target.value }))}
+                              onFocus={() => {
+                                if (currentFace === 1) {
+                                  setFocusedFace1(true);
+                                } else if (currentFace === 2) {
+                                  setFocusedFace2(true);
+                                }
+                              }}
+                              onBlur={() => {
+                                setFocusedFace1(false);
+                                setFocusedFace2(false);
+                              }}
+                              className={`w-24 px-2 py-1 text-xs border rounded ${
+                                faceStatuses[currentFace] === 'correct' ? 'border-green-500 bg-green-50' :
+                                faceStatuses[currentFace] === 'incorrect' ? 'border-red-500 bg-red-50' :
+                                'border-gray-300'
+                              }`}
                               placeholder="?"
                               style={{ pointerEvents: 'auto' }}
                             />
+                            <button
+                              className="px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
+                              style={{ pointerEvents: 'auto' }}
+                              onClick={checkCurrentFace}
+                            >
+                              Check
+                            </button>
+                            {currentFace === 2 && (
+                              <button
+                                className="px-2 py-1 bg-gray-500 text-white rounded text-xs hover:bg-gray-600"
+                                style={{ pointerEvents: 'auto' }}
+                                onClick={() => {
+                                  setFaceInputs(prev => ({ ...prev, 2: '14' }));
+                                  setFaceStatuses(prev => ({ ...prev, 2: null }));
+                                }}
+                              >
+                                Hint
+                              </button>
+                            )}
                           </div>
                         </div>
                       )}
@@ -1198,13 +1276,13 @@ const Sphere = () => {
                         
                         {faceInputsVisible && (
                           <div className="mb-4 p-3 rounded text-sm bg-blue-50 border border-blue-200">
-                            <h4 className="font-semibold text-gray-800 text-xs">Face 1</h4>
+                            <h4 className="font-semibold text-gray-800 text-xs">{`Face ${currentFace}`}</h4>
                             <p className="text-xs text-gray-600 mb-2">Enter the area for face 1:</p>
                             <div className="flex items-center gap-2">
                               <input
                                 type="text"
-                                value={face1Input}
-                                onChange={(e) => setFace1Input(e.target.value)}
+                                value={faceInputs[currentFace]}
+                                onChange={(e) => setFaceInputs(prev => ({ ...prev, [currentFace]: e.target.value }))}
                                 className="w-16 px-2 py-1 text-xs border rounded border-gray-300"
                                 placeholder="?"
                                 style={{ pointerEvents: 'auto' }}
