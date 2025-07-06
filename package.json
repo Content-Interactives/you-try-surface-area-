@@ -1,5 +1,5 @@
 {
-  "name": "sphere",
+  "name": "you-try-surface-area-",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -46,5 +46,5 @@
   "bugs": {
     "url": "https://github.com/destinynguyen/surface-area/issues"
   },
-  "homepage": "https://destinynguyen.github.io/surface-area/"
+  "homepage": "https://destinynguyen.github.io/you-try-surface-area-"
 }
