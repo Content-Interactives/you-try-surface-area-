@@ -78,13 +78,14 @@ const Sphere = () => {
   const [focusedCalcBlock, setFocusedCalcBlock] = useState(null); // 'bottom' | 'top' | null
   const [focusedStep3, setFocusedStep3] = useState(false);
   const [faceInputsVisible, setFaceInputsVisible] = useState(false);
-  const [currentFace, setCurrentFace] = useState(1); // 1 or 2 for now
-  const [faceInputs, setFaceInputs] = useState({ 1: '', 2: '' });
-  const [faceStatuses, setFaceStatuses] = useState({ 1: null, 2: null }); // 'correct' | 'incorrect' | null
+  const [currentFace, setCurrentFace] = useState(1); // 1, 2, or 3
+  const [faceInputs, setFaceInputs] = useState({ 1: '', 2: '', 3: '' });
+  const [faceStatuses, setFaceStatuses] = useState({ 1: null, 2: null, 3: null }); // 'correct' | 'incorrect' | null
   // Highlight for Face-by-Face workflow
   const [focusedFace1, setFocusedFace1] = useState(false);
   // Highlight for Face 2 (backwards L side)
   const [focusedFace2, setFocusedFace2] = useState(false);
+  const [face2HintVisible, setFace2HintVisible] = useState(false);
 
   const shapeLibrary = [
     { id: 'circle', name: 'Circle', svg: '○', formula: 'πr²' },
@@ -203,6 +204,15 @@ const Sphere = () => {
       }
       input[type="number"] {
         -moz-appearance: textfield;
+      }
+      /* Animated dashed line for Face 2 hint (draw once, then stay) */
+      .dash-animate {
+        stroke-dasharray: 60;     /* path length */
+        stroke-dashoffset: 60;    /* start hidden */
+        animation: dashDraw 1s linear forwards;
+      }
+      @keyframes dashDraw {
+        to { stroke-dashoffset: 0; }
       }
     `;
     document.head.appendChild(style);
@@ -797,9 +807,20 @@ const Sphere = () => {
 
   const checkCurrentFace = () => {
     const val = parseFloat(faceInputs[currentFace]);
-    const expected = currentFace === 1 ? 21 : 14; // Face1: 7x3, Face2: 7x2
+    const expected = currentFace === 1 ? 21 : 14; // Face1:21, Face2:14, Face3:14 (same)
     setFaceStatuses(prev => ({ ...prev, [currentFace]: (!isNaN(val) && Math.abs(val - expected) < 0.0001) ? 'correct' : 'incorrect' }));
   };
+
+  // after isFace2Active const definition
+  const isFace2Active = faceInputsVisible && currentFace === 2;
+  const isFace3Active = faceInputsVisible && currentFace === 3;
+
+  // Hide hint line whenever user leaves Face 2
+  useEffect(() => {
+    if (!isFace2Active) {
+      setFace2HintVisible(false);
+    }
+  }, [isFace2Active]);
 
   return (
     <div className="bg-gray-100 p-8 min-h-screen">
@@ -851,6 +872,10 @@ const Sphere = () => {
             >
               <div style={{ position: 'relative', width: '500px', height: '500px' }}>
                 <svg width="500" height="500">
+                  {/* Grid background removed */}
+
+                  {/* Coordinate axes removed */}
+
                   {/* 3D Rectangle at (2,2) with isometric projection */}
                   {/* First box (2 units wide, 1 unit tall, 3 units deep) */}
                   <polyline points="150,350 250,350" fill="none" stroke="#008542" strokeWidth="2" />
@@ -943,7 +968,7 @@ const Sphere = () => {
                   />
                   <polygon
                     points="150,350 150,300 60,210 60,260"
-                    fill={focusedCalcBlock === 'bottom' || focusedStep3 ? 'rgba(89,83,240,0.18)' : 'transparent'}
+                    fill={focusedCalcBlock === 'bottom' || focusedStep3 || isFace3Active ? 'rgba(89,83,240,0.18)' : 'transparent'}
                     stroke="none"
                     style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                   />
@@ -956,7 +981,7 @@ const Sphere = () => {
                   />
                   <polygon
                     points="250,350 300,350 300,250 250,250"
-                    fill={focusedCalcBlock === 'top' || focusedStep3 || (focusedFace2 && currentFace === 2) ? 'rgba(89,83,240,0.18)' : 'transparent'}
+                    fill={focusedCalcBlock === 'top' || focusedStep3 || isFace2Active ? 'rgba(89,83,240,0.18)' : 'transparent'}
                     stroke="none"
                     style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                   />
@@ -981,6 +1006,16 @@ const Sphere = () => {
                   {/* Dimension numbers for right/top rectangle */}
                   <text x="325" y="300" fill="transparent" fontSize="18" fontWeight="bold" textAnchor="middle"></text>
                   <text x="235" y="275" fill="#008542" fontSize="18" fontWeight="bold" textAnchor="middle">2</text> {/* height of top block, left vertical edge parallel to '1' */}
+
+                  {face2HintVisible && isFace2Active && (
+                    <line
+                      x1="250" y1="300"  // (5,4)
+                      x2="250" y2="350"  // (5,3)
+                      stroke="#FFA500"
+                      strokeWidth={4}
+                      className="dash-animate"
+                    />
+                  )}
                 </svg>
               </div>
               
@@ -994,6 +1029,8 @@ const Sphere = () => {
                         setCurrentFace(1);
                       } else if (currentFace === 1) {
                         setCurrentFace(2);
+                      } else if (currentFace === 2) {
+                        setCurrentFace(3);
                       }
                     }}
                     className="flex items-center justify-center"
@@ -1007,7 +1044,9 @@ const Sphere = () => {
                   <button
                     onClick={() => {
                       if (faceInputsVisible) {
-                        if (currentFace === 2) {
+                        if (currentFace === 3) {
+                          setCurrentFace(2);
+                        } else if (currentFace === 2) {
                           setCurrentFace(1);
                         } else {
                           setFaceInputsVisible(false);
@@ -1078,8 +1117,7 @@ const Sphere = () => {
                                 className="px-2 py-1 bg-gray-500 text-white rounded text-xs hover:bg-gray-600"
                                 style={{ pointerEvents: 'auto' }}
                                 onClick={() => {
-                                  setFaceInputs(prev => ({ ...prev, 2: '14' }));
-                                  setFaceStatuses(prev => ({ ...prev, 2: null }));
+                                  setFace2HintVisible(true);
                                 }}
                               >
                                 Hint
