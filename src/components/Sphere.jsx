@@ -86,6 +86,7 @@ const Sphere = () => {
   // Highlight for Face 2 (backwards L side)
   const [focusedFace2, setFocusedFace2] = useState(false);
   const [face2HintVisible, setFace2HintVisible] = useState(false);
+  const [face2HintStep, setFace2HintStep] = useState(1); // 1 for first message, 2 for second message
 
   const shapeLibrary = [
     { id: 'circle', name: 'Circle', svg: '○', formula: 'πr²' },
@@ -257,10 +258,10 @@ const Sphere = () => {
   };
 
   const calculateStairStepSurfaceArea = () => {
-    // Bottom block: 7cm x 3cm x 1cm
+    // Bottom block: 7cm x 3cm x 2cm
     const bottomLength = 7;
     const bottomWidth = 3;
-    const bottomHeight = 1;
+    const bottomHeight = 2;
     
     // Top block: 7cm x 2cm x 4cm
     const topLength = 7;
@@ -649,7 +650,7 @@ const Sphere = () => {
     // Check if all dimensions are correct
     const allCorrect = Object.keys(dimensionInputs).every(key => {
       const expected = key.includes('bottom') ? 
-        (key.includes('Length') ? 7 : key.includes('Width') ? 3 : 1) :
+        (key.includes('Length') ? 7 : key.includes('Width') ? 3 : 2) :
         (key.includes('Length') ? 7 : key.includes('Width') ? 2 : 4);
       return Math.abs(parseFloat(dimensionInputs[key] || 0) - expected) < 0.1;
     });
@@ -812,6 +813,7 @@ const Sphere = () => {
   };
 
   // after isFace2Active const definition
+  const isFace1Active = faceInputsVisible && currentFace === 1;
   const isFace2Active = faceInputsVisible && currentFace === 2;
   const isFace3Active = faceInputsVisible && currentFace === 3;
 
@@ -841,7 +843,6 @@ const Sphere = () => {
               <img src={import.meta.env.BASE_URL + 'Flexi_ThumbsUp.png'} alt="Mascot thumbs up" style={{ width: 100, height: 'auto', display: 'block' }} />
               <div style={{
                 background: 'white',
-                border: '2px solid #008542',
                 borderRadius: '16px',
                 padding: '16px 20px',
                 marginLeft: '16px',
@@ -850,9 +851,59 @@ const Sphere = () => {
                 color: '#222',
                 maxWidth: 320,
                 position: 'relative',
-                minWidth: 220
+                minWidth: 220,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                pointerEvents: 'auto'
               }}>
-                Identify the dimensions of the two blocks.
+                <span>
+                  {face2HintVisible && isFace2Active ? 
+                    (face2HintStep === 1 ? "First, split the shape into 2 blocks!" : 
+                     face2HintStep === 2 ? "Calculate the surface area of both boxes then add!" : 
+                     "(5x2) + (2x4)") : 
+                    "Identify the dimensions of the two blocks."
+                  }
+                </span>
+                {face2HintVisible && isFace2Active && face2HintStep < 3 && (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('Forward arrow clicked, current step:', face2HintStep);
+                      if (face2HintStep === 1) {
+                        setFace2HintStep(2);
+                      } else if (face2HintStep === 2) {
+                        setFace2HintStep(3);
+                      }
+                    }}
+                    style={{
+                      background: '#008542',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: '28px',
+                      height: '28px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      marginLeft: '12px',
+                      flexShrink: 0,
+                      pointerEvents: 'auto',
+                      zIndex: 1000,
+                      position: 'relative'
+                    }}
+                    onMouseDown={(e) => {
+                      console.log('Mouse down on forward arrow');
+                      e.stopPropagation();
+                    }}
+                  >
+                    <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="m9 18 6-6-6-6"/>
+                    </svg>
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -864,8 +915,6 @@ const Sphere = () => {
                 width: '100%',
                 height: '500px',
                 marginTop: showCalculations ? '-6rem' : '-9rem', // Move container 0.5rem further up
-                border: '2px solid #008542',
-                borderRadius: '16px',
                 padding: '16px',
                 boxSizing: 'border-box'
               }}
@@ -956,13 +1005,13 @@ const Sphere = () => {
                   {/* Existing polygons for block faces, but no highlight logic now */}
                   <polygon
                     points="150,300 250,300 160,210 60,210"
-                    fill={focusedCalcBlock === 'bottom' || focusedStep3 || (focusedFace1 && currentFace === 1) ? 'rgba(89,83,240,0.18)' : 'transparent'}
+                    fill={focusedCalcBlock === 'bottom' || focusedStep3 || isFace1Active ? 'rgba(89,83,240,0.18)' : 'transparent'}
                     stroke="none"
                     style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                   />
                   <polygon
                     points="150,350 250,350 250,300 150,300"
-                    fill={focusedCalcBlock === 'bottom' || focusedStep3 || (focusedFace2 && currentFace === 2) ? 'rgba(89,83,240,0.18)' : 'transparent'}
+                    fill={focusedCalcBlock === 'bottom' || focusedStep3 || isFace2Active ? 'rgba(89,83,240,0.18)' : 'transparent'}
                     stroke="none"
                     style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                   />
@@ -993,7 +1042,7 @@ const Sphere = () => {
                   />
                   <polygon
                     points="210,260 210,160 160,160 160,260"
-                    fill={focusedCalcBlock === 'top' || focusedStep3 || (focusedFace2 && currentFace === 2) ? 'rgba(89,83,240,0.18)' : 'transparent'}
+                    fill={focusedCalcBlock === 'top' || focusedStep3 || isFace2Active ? 'rgba(89,83,240,0.18)' : 'transparent'}
                     stroke="none"
                     style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                   />
@@ -1018,6 +1067,8 @@ const Sphere = () => {
                   )}
                 </svg>
               </div>
+              
+
               
               {!showCalculations && (
                 <>
@@ -1117,7 +1168,12 @@ const Sphere = () => {
                                 className="px-2 py-1 bg-gray-500 text-white rounded text-xs hover:bg-gray-600"
                                 style={{ pointerEvents: 'auto' }}
                                 onClick={() => {
+                                  setFace2HintStep(1);
                                   setFace2HintVisible(true);
+                                  setTimeout(() => {
+                                    setFace2HintVisible(false);
+                                    setFace2HintStep(1);
+                                  }, 10000);
                                 }}
                               >
                                 Hint
@@ -1191,7 +1247,7 @@ const Sphere = () => {
                           onClick={() => {
                             checkDimension('bottomLength', 7);
                             checkDimension('bottomWidth', 3);
-                            checkDimension('bottomHeight', 1);
+                            checkDimension('bottomHeight', 2);
                           }}
                         >
                           Check
@@ -1274,7 +1330,7 @@ const Sphere = () => {
                       <div className="p-2 bg-green-50 border border-green-200 rounded hidden">
                         <p className="text-sm text-green-700 font-semibold">✓ All dimensions correct!</p>
                         <p className="text-xs text-green-600 mt-1">
-                          <span>Bottom: 7 × 3 × 1</span><br/>
+                          <span>Bottom: 7 × 3 × 2</span><br/>
                           <span>Top: 7 × 2 × 4</span>
                         </p>
                       </div>
@@ -1303,7 +1359,7 @@ const Sphere = () => {
                           <div className="grid grid-cols-2 gap-3 text-xs">
                             <div>
                               <span className="font-medium text-green-700">Bottom Block:</span>
-                              <div className="text-green-600">L: 7, W: 3, H: 1</div>
+                              <div className="text-green-600">L: 7, W: 3, H: 2</div>
                             </div>
                             <div>
                               <span className="font-medium text-green-700">Top Block:</span>
