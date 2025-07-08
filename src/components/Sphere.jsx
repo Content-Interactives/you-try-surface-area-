@@ -1011,7 +1011,7 @@ const Sphere = () => {
                   />
                   <polygon
                     points="150,350 250,350 250,300 150,300"
-                    fill={focusedCalcBlock === 'bottom' || focusedStep3 || isFace2Active ? 'rgba(89,83,240,0.18)' : 'transparent'}
+                    fill={focusedCalcBlock === 'bottom' || focusedStep3 ? 'rgba(89,83,240,0.18)' : 'transparent'}
                     stroke="none"
                     style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                   />
@@ -1030,7 +1030,7 @@ const Sphere = () => {
                   />
                   <polygon
                     points="250,350 300,350 300,250 250,250"
-                    fill={focusedCalcBlock === 'top' || focusedStep3 || isFace2Active ? 'rgba(89,83,240,0.18)' : 'transparent'}
+                    fill={focusedCalcBlock === 'top' || focusedStep3 ? 'rgba(89,83,240,0.18)' : 'transparent'}
                     stroke="none"
                     style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                   />
@@ -1042,7 +1042,14 @@ const Sphere = () => {
                   />
                   <polygon
                     points="210,260 210,160 160,160 160,260"
-                    fill={focusedCalcBlock === 'top' || focusedStep3 || isFace2Active ? 'rgba(89,83,240,0.18)' : 'transparent'}
+                    fill={focusedCalcBlock === 'top' || focusedStep3 ? 'rgba(89,83,240,0.18)' : 'transparent'}
+                    stroke="none"
+                    style={{ cursor: 'pointer', pointerEvents: 'auto' }}
+                  />
+                  {/* Rear horizontal 3x2 face of bottom block */}
+                  <polygon
+                    points="60,210 160,210 160,260 60,260"
+                    fill={isFace2Active ? 'rgba(89,83,240,0.18)' : 'transparent'}
                     stroke="none"
                     style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                   />
