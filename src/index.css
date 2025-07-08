@@ -11,4 +11,19 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes flipUp {
+  0% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: rotateX(-90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateX(-45deg);
+    opacity: 1;
+  }
 }  

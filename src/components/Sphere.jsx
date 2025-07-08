@@ -87,6 +87,9 @@ const Sphere = () => {
   const [focusedFace2, setFocusedFace2] = useState(false);
   const [face2HintVisible, setFace2HintVisible] = useState(false);
   const [face2HintStep, setFace2HintStep] = useState(1); // 1 for first message, 2 for second message
+  const [face2LineVisible, setFace2LineVisible] = useState(false);
+  const [face2MessageFlipping, setFace2MessageFlipping] = useState(false);
+  const [face2HintTimeout, setFace2HintTimeout] = useState(null);
 
   const shapeLibrary = [
     { id: 'circle', name: 'Circle', svg: '○', formula: 'πr²' },
@@ -638,7 +641,7 @@ const Sphere = () => {
     setPlacedShapes(placedShapes.filter(shape => shape.id !== shapeId));
   };
 
-  const checkDimension = (field, expectedValue) => {
+  const checkDimension = (field, expectedValue, skipGlobalCheck = false) => {
     const inputValue = parseFloat(dimensionInputs[field]);
     const isCorrect = Math.abs(inputValue - expectedValue) < 0.1;
     
@@ -647,16 +650,18 @@ const Sphere = () => {
       [field]: isCorrect ? 'correct' : 'incorrect'
     }));
 
-    // Check if all dimensions are correct
-    const allCorrect = Object.keys(dimensionInputs).every(key => {
-      const expected = key.includes('bottom') ? 
-        (key.includes('Length') ? 7 : key.includes('Width') ? 3 : 2) :
-        (key.includes('Length') ? 7 : key.includes('Width') ? 2 : 4);
-      return Math.abs(parseFloat(dimensionInputs[key] || 0) - expected) < 0.1;
-    });
+    // Only check if all dimensions are correct if not skipping global check
+    if (!skipGlobalCheck) {
+      const allCorrect = Object.keys(dimensionInputs).every(key => {
+        const expected = key.includes('bottom') ? 
+          (key.includes('Length') ? 7 : key.includes('Width') ? 3 : 2) :
+          (key.includes('Length') ? 7 : key.includes('Width') ? 2 : 4);
+        return Math.abs(parseFloat(dimensionInputs[key] || 0) - expected) < 0.1;
+      });
 
-    if (allCorrect) {
-      setDimensionsCompleted(true);
+      if (allCorrect) {
+        setDimensionsCompleted(true);
+      }
     }
   };
 
@@ -821,8 +826,14 @@ const Sphere = () => {
   useEffect(() => {
     if (!isFace2Active) {
       setFace2HintVisible(false);
+      setFace2LineVisible(false);
+      setFace2MessageFlipping(false);
+      if (face2HintTimeout) {
+        clearTimeout(face2HintTimeout);
+        setFace2HintTimeout(null);
+      }
     }
-  }, [isFace2Active]);
+  }, [isFace2Active, face2HintTimeout]);
 
   return (
     <div className="bg-gray-100 p-8 min-h-screen">
@@ -988,7 +999,7 @@ const Sphere = () => {
                   <text x="325" y="300" fill="transparent" fontSize="18" fontWeight="bold" textAnchor="middle"></text>
                   <text x="235" y="275" fill="#008542" fontSize="18" fontWeight="bold" textAnchor="middle">2</text> {/* height of top block, left vertical edge parallel to '1' */}
 
-                  {face2HintVisible && isFace2Active && (
+                  {face2LineVisible && isFace2Active && (
                     <line
                       x1="250" y1="300"  // (5,4)
                       x2="250" y2="350"  // (5,3)
@@ -1044,7 +1055,7 @@ const Sphere = () => {
                   </button>
                 </>
               )}
-
+              
               {/* Calculations Section */}
               <div className="w-80 space-y-4" style={{ 
                 position: 'relative', 
@@ -1062,7 +1073,7 @@ const Sphere = () => {
                       {/* Remove mascot image from here if present */}
                       
                       {faceInputsVisible && (
-                        <div className="space-y-2">
+                      <div className="space-y-2">
                           <h4 className="font-semibold text-gray-800 text-sm">{`Face ${currentFace === 2 ? '2+3' : currentFace}`}</h4>
                           <div className="flex items-center gap-2">
                             <input
@@ -1089,8 +1100,10 @@ const Sphere = () => {
                               style={{ pointerEvents: 'auto' }}
                             />
                             <button
-                              className="px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
-                              style={{ pointerEvents: 'auto' }}
+                              className="px-2 py-1 text-white rounded text-xs"
+                              style={{ backgroundColor: '#ff9533', borderColor: '#ff9533', pointerEvents: 'auto' }}
+                              onMouseOver={e => e.currentTarget.style.backgroundColor = '#e6842d'}
+                              onMouseOut={e => e.currentTarget.style.backgroundColor = '#ff9533'}
                               onClick={checkCurrentFace}
                             >
                               Check
@@ -1101,11 +1114,24 @@ const Sphere = () => {
                                 style={{ pointerEvents: 'auto' }}
                                 onClick={() => {
                                   setFace2HintStep(1);
+                                  setFace2MessageFlipping(true);
                                   setFace2HintVisible(true);
+                                  // Change the text at the midpoint of the flip animation
                                   setTimeout(() => {
+                                    setFace2HintStep(2);
+                                  }, 300); // 50% of 600ms animation
+                                  // Show the line animation after the message flip animation completes
+                                  setTimeout(() => {
+                                    setFace2LineVisible(true);
+                                  }, 1500); // 600ms for flip animation + 900ms buffer
+                                  const timeoutId = setTimeout(() => {
                                     setFace2HintVisible(false);
+                                    setFace2LineVisible(false);
+                                    setFace2MessageFlipping(false);
                                     setFace2HintStep(1);
+                                    setFace2HintTimeout(null);
                                   }, 10000);
+                                  setFace2HintTimeout(timeoutId);
                                 }}
                               >
                                 Hint
@@ -1173,9 +1199,9 @@ const Sphere = () => {
                         </div>
                         <button 
                           className="w-full px-2 py-1 text-white rounded text-xs"
-                          style={{ backgroundColor: '#008542', borderColor: '#008542', pointerEvents: 'auto' }}
-                          onMouseOver={e => e.currentTarget.style.backgroundColor = '#006b36'}
-                          onMouseOut={e => e.currentTarget.style.backgroundColor = '#008542'}
+                          style={{ backgroundColor: '#ff9533', borderColor: '#ff9533', pointerEvents: 'auto' }}
+                          onMouseOver={e => e.currentTarget.style.backgroundColor = '#e6842d'}
+                          onMouseOut={e => e.currentTarget.style.backgroundColor = '#ff9533'}
                           onClick={() => {
                             checkDimension('bottomLength', 7);
                             checkDimension('bottomWidth', 3);
@@ -1244,17 +1270,17 @@ const Sphere = () => {
                         </div>
                         <button 
                           className="w-full px-2 py-1 text-white rounded text-xs"
-                          style={{ backgroundColor: '#008542', borderColor: '#008542', pointerEvents: 'auto' }}
-                          onMouseOver={e => e.currentTarget.style.backgroundColor = '#006b36'}
-                          onMouseOut={e => e.currentTarget.style.backgroundColor = '#008542'}
+                          style={{ backgroundColor: '#ff9533', borderColor: '#ff9533', pointerEvents: 'auto' }}
+                          onMouseOver={e => e.currentTarget.style.backgroundColor = '#e6842d'}
+                          onMouseOut={e => e.currentTarget.style.backgroundColor = '#ff9533'}
                           onClick={() => {
-                            checkDimension('topLength', 7);
-                            checkDimension('topWidth', 2);
-                            checkDimension('topHeight', 4);
+                            checkDimension('topLength', 7, true);
+                            checkDimension('topWidth', 2, true);
+                            checkDimension('topHeight', 4, true);
                           }}
                         >
                           Check
-                        </button>
+                          </button>
                       </div>
                     </div>
                   ) : !showCalculations ? (
@@ -1341,9 +1367,11 @@ const Sphere = () => {
                               onBlur={() => setFocusedCalcBlock(null)}
                             />
                             <button 
-                              className="px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
+                              className="px-2 py-1 text-white rounded text-xs"
+                              style={{ backgroundColor: '#ff9533', borderColor: '#ff9533', pointerEvents: 'auto' }}
+                              onMouseOver={e => e.currentTarget.style.backgroundColor = '#e6842d'}
+                              onMouseOut={e => e.currentTarget.style.backgroundColor = '#ff9533'}
                               onClick={() => checkCalculationStep('step1Result', 62)}
-                              style={{ pointerEvents: 'auto' }}
                             >
                               Check
                             </button>
@@ -1375,9 +1403,11 @@ const Sphere = () => {
                               onBlur={() => setFocusedCalcBlock(null)}
                             />
                             <button 
-                              className="px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
+                              className="px-2 py-1 text-white rounded text-xs"
+                              style={{ backgroundColor: '#ff9533', borderColor: '#ff9533', pointerEvents: 'auto' }}
+                              onMouseOver={e => e.currentTarget.style.backgroundColor = '#e6842d'}
+                              onMouseOut={e => e.currentTarget.style.backgroundColor = '#ff9533'}
                               onClick={() => checkCalculationStep('step2Result', 100)}
-                              style={{ pointerEvents: 'auto' }}
                             >
                               Check
                             </button>
@@ -1409,9 +1439,11 @@ const Sphere = () => {
                               style={{ pointerEvents: 'auto' }}
                             />
                             <button 
-                              className="px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
+                              className="px-2 py-1 text-white rounded text-xs"
+                              style={{ backgroundColor: '#ff9533', borderColor: '#ff9533', pointerEvents: 'auto' }}
+                              onMouseOver={e => e.currentTarget.style.backgroundColor = '#e6842d'}
+                              onMouseOut={e => e.currentTarget.style.backgroundColor = '#ff9533'}
                               onClick={() => checkCalculationStep('step3Result', 162)}
-                              style={{ pointerEvents: 'auto' }}
                             >
                               Check
                             </button>
@@ -1442,9 +1474,11 @@ const Sphere = () => {
                             />
                             <span className="text-xs text-gray-600">square units</span>
                             <button 
-                              className="px-2 py-1 bg-green-500 text-white rounded text-xs hover:bg-green-600"
+                              className="px-2 py-1 text-white rounded text-xs"
+                              style={{ backgroundColor: '#ff9533', borderColor: '#ff9533', pointerEvents: 'auto' }}
+                              onMouseOver={e => e.currentTarget.style.backgroundColor = '#e6842d'}
+                              onMouseOut={e => e.currentTarget.style.backgroundColor = '#ff9533'}
                               onClick={() => checkCalculationStep('finalAnswer', 162)}
-                              style={{ pointerEvents: 'auto' }}
                             >
                               Check
                             </button>
@@ -1613,13 +1647,13 @@ const Sphere = () => {
           position: 'absolute',
           bottom: '20px',
           left: '20px',
-          zIndex: 1000,
+            zIndex: 1000,
           pointerEvents: 'none'
         }}>
           <img 
             src={import.meta.env.BASE_URL + 'Flexi_Wave.png'} 
             alt="Flexi Wave" 
-            style={{ 
+                style={{
               width: '100px', 
               height: 'auto',
               display: 'block'
@@ -1628,28 +1662,87 @@ const Sphere = () => {
           {/* Message box for first page */}
           {isCustomShape && !showCalculations && (
             <div style={{
-              position: 'absolute',
+                      position: 'absolute',
               bottom: '60px',
               left: '110px',
-              backgroundColor: 'white',
-              border: '2px solid #008542',
-              borderRadius: '8px',
-              padding: '10px 14px',
-              fontSize: '14px',
-              fontWeight: '500',
-              color: '#008542',
-              whiteSpace: 'nowrap',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-              pointerEvents: 'none'
+              perspective: '1000px'
             }}>
-              {faceInputsVisible ? 
-                (currentFace === 1 ? 'Find the surface area of Face 1!' : 
-                 currentFace === 2 ? 'Find the surface area of Face 2 + 3!' : 
-                 'Find the surface area of Face 4!') : 
-                'Identify the dimensions of the two blocks!'}
-            </div>
-          )}
+              <div               style={{
+                backgroundColor: 'white',
+                border: '2px solid #008542',
+                borderRadius: '8px',
+                padding: '10px 14px',
+                fontSize: '14px',
+                fontWeight: '500',
+                color: '#008542',
+                whiteSpace: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? 'pre-line' : 'nowrap',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                pointerEvents: (currentFace === 2 && face2HintStep >= 2 && face2HintStep <= 4) ? 'auto' : 'none',
+                transformStyle: 'preserve-3d',
+                animation: (faceInputsVisible && currentFace === 2 && face2MessageFlipping) ? 'flipUp 0.6s ease-in-out' : 'none',
+                height: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? '60px' : '44px',
+                      display: 'flex',
+                      alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center',
+                minWidth: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? '380px' : '200px'
+              }}>
+                {faceInputsVisible ? 
+                  (currentFace === 1 ? 'Find the surface area of Face 1!' : 
+                                        currentFace === 2 ? (
+                       face2HintStep === 1 ? 'Find the surface area of Face 2 + 3!' :
+                       face2HintStep === 2 ? (
+                         <div>
+                           First, divide the shape into two blocks!
+                           <span 
+                             style={{ cursor: 'pointer', fontSize: '16px', marginLeft: '8px' }}
+                             onClick={() => setFace2HintStep(3)}
+                           >
+                             →
+                           </span>
+                         </div>
+                       ) :
+                       face2HintStep === 3 ? (
+                         <div>
+                           <span 
+                             style={{ cursor: 'pointer', fontSize: '16px', marginRight: '8px' }}
+                             onClick={() => setFace2HintStep(2)}
+                           >
+                             ←
+                           </span>
+                           Calculate the surface area of the two blocks and then add together!
+                           <span 
+                             style={{ cursor: 'pointer', fontSize: '16px', marginLeft: '8px' }}
+                             onClick={() => {
+                               setFace2HintStep(4);
+                               // Clear the timeout when reaching final step
+                               if (face2HintTimeout) {
+                                 clearTimeout(face2HintTimeout);
+                                 setFace2HintTimeout(null);
+                               }
+                             }}
+                           >
+                             →
+                           </span>
+              </div>
+                       ) : (
+                         <div>
+                           <span 
+                             style={{ cursor: 'pointer', fontSize: '16px', marginRight: '8px' }}
+                             onClick={() => setFace2HintStep(3)}
+                           >
+                             ←
+                           </span>
+                           Lastly, multiply your previous answer by 2 since you have 2 L shape blocks!
+                </div>
+                       )
+                     ) : 
+                   'Find the surface area of Face 4!') : 
+                  'Identify the dimensions of the two blocks!'}
+          </div>
         </div>
+      )}
+          </div>
       </Card>
     </div>
   );
