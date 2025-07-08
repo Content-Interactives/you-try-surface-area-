@@ -826,87 +826,12 @@ const Sphere = () => {
 
   return (
     <div className="bg-gray-100 p-8 min-h-screen">
-      <Card className="w-full max-w-2xl mx-auto shadow-md bg-white">
+      <Card className="w-full max-w-2xl mx-auto shadow-md bg-white" style={{ position: 'relative' }}>
         <div style={{ padding: '24px 24px 0 24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '1.75rem', fontWeight: 600, color: '#008542' }}>Surface Area of the 3D Staircase</span>
+            <span style={{ fontSize: '1.5rem', fontWeight: 400, color: '#008542' }}>Surface Area of the 3D Staircase</span>
           </div>
-          {/* Flexi mascot just below the header and above the 3D shape, only on calculations page */}
-          {isCustomShape && dimensionsCompleted && showCalculations && (
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start', margin: '32px 0 16px 0', paddingLeft: '15px' }}>
-              <img src={import.meta.env.BASE_URL + 'Flexi_Teacher.png'} alt="Mascot teacher" style={{ width: 100, height: 'auto', display: 'block' }} />
-            </div>
-          )}
-          {/* Flexi mascot just below the header and above the 3D shape, only on dimensions input page (You Try page 1) */}
-          {isCustomShape && !showCalculations && (
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start', margin: '32px 0 16px 0', paddingLeft: '15px' }}>
-              <img src={import.meta.env.BASE_URL + 'Flexi_ThumbsUp.png'} alt="Mascot thumbs up" style={{ width: 100, height: 'auto', display: 'block' }} />
-              <div style={{
-                background: 'white',
-                borderRadius: '16px',
-                padding: '16px 20px',
-                marginLeft: '16px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                fontSize: '1rem',
-                color: '#222',
-                maxWidth: 320,
-                position: 'relative',
-                minWidth: 220,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                pointerEvents: 'auto'
-              }}>
-                <span>
-                  {face2HintVisible && isFace2Active ? 
-                    (face2HintStep === 1 ? "First, split the shape into 2 blocks!" : 
-                     face2HintStep === 2 ? "Calculate the surface area of both boxes then add!" : 
-                     "(5x2) + (2x4)") : 
-                    "Identify the dimensions of the two blocks."
-                  }
-                </span>
-                {face2HintVisible && isFace2Active && face2HintStep < 3 && (
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      console.log('Forward arrow clicked, current step:', face2HintStep);
-                      if (face2HintStep === 1) {
-                        setFace2HintStep(2);
-                      } else if (face2HintStep === 2) {
-                        setFace2HintStep(3);
-                      }
-                    }}
-                    style={{
-                      background: '#008542',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '50%',
-                      width: '28px',
-                      height: '28px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      marginLeft: '12px',
-                      flexShrink: 0,
-                      pointerEvents: 'auto',
-                      zIndex: 1000,
-                      position: 'relative'
-                    }}
-                    onMouseDown={(e) => {
-                      console.log('Mouse down on forward arrow');
-                      e.stopPropagation();
-                    }}
-                  >
-                    <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="m9 18 6-6-6-6"/>
-                    </svg>
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
+
           {isCustomShape && (
             <div
               className="space-y-4 flex items-center justify-center"
@@ -1095,7 +1020,7 @@ const Sphere = () => {
                     style={{ position: 'absolute', right: '30px', bottom: '30px', width: '30px', height: '30px', backgroundColor: '#008542', color: '#fff', borderRadius: '6px', pointerEvents: 'auto' }}
                     aria-label="Forward"
                   >
-                    <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5l7 7-7 7"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <span style={{ fontSize: '18px', fontWeight: 'bold' }}>&gt;</span>
                   </button>
 
                   {/* Back button (always visible). Disabled on the first calculations page */}
@@ -1115,7 +1040,7 @@ const Sphere = () => {
                     style={{ position: 'absolute', right: '70px', bottom: '30px', width: '30px', height: '30px', backgroundColor: '#008542', color: '#fff', borderRadius: '6px', opacity: faceInputsVisible ? 1 : 0.4, pointerEvents: faceInputsVisible ? 'auto' : 'none' }}
                     aria-label="Back"
                   >
-                    <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19l-7-7 7-7"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <span style={{ fontSize: '18px', fontWeight: 'bold' }}>&lt;</span>
                   </button>
                 </>
               )}
@@ -1124,8 +1049,8 @@ const Sphere = () => {
               <div className="w-80 space-y-4" style={{ 
                 position: 'relative', 
                 zIndex: 100, 
-                marginLeft: '-100px', 
-                marginTop: !dimensionsCompleted ? '20px' : '-220px' 
+                marginLeft: '-150px', 
+                marginTop: !dimensionsCompleted ? '80px' : '-160px' 
               }}>
                 <div className="p-4">
                   {(!dimensionsCompleted) && (
@@ -1202,7 +1127,7 @@ const Sphere = () => {
                               onChange={(e) => setDimensionInputs(prev => ({...prev, bottomLength: e.target.value}))}
                               onFocus={() => setFocusedInput('bottomLength')}
                               onBlur={() => setFocusedInput(null)}
-                              className={`w-full px-2 py-1 text-xs border rounded ${
+                              className={`w-16 px-2 py-1 text-xs border rounded ${
                                 dimensionStatus.bottomLength === 'correct' ? 'border-green-500 bg-green-50' :
                                 dimensionStatus.bottomLength === 'incorrect' ? 'border-red-500 bg-red-50' :
                                 'border-gray-300'
@@ -1219,7 +1144,7 @@ const Sphere = () => {
                               onChange={(e) => setDimensionInputs(prev => ({...prev, bottomWidth: e.target.value}))}
                               onFocus={() => setFocusedInput('bottomWidth')}
                               onBlur={() => setFocusedInput(null)}
-                              className={`w-full px-2 py-1 text-xs border rounded ${
+                              className={`w-16 px-2 py-1 text-xs border rounded ${
                                 dimensionStatus.bottomWidth === 'correct' ? 'border-green-500 bg-green-50' :
                                 dimensionStatus.bottomWidth === 'incorrect' ? 'border-red-500 bg-red-50' :
                                 'border-gray-300'
@@ -1236,7 +1161,7 @@ const Sphere = () => {
                               onChange={(e) => setDimensionInputs(prev => ({...prev, bottomHeight: e.target.value}))}
                               onFocus={() => setFocusedInput('bottomHeight')}
                               onBlur={() => setFocusedInput(null)}
-                              className={`w-full px-2 py-1 text-xs border rounded ${
+                              className={`w-16 px-2 py-1 text-xs border rounded ${
                                 dimensionStatus.bottomHeight === 'correct' ? 'border-green-500 bg-green-50' :
                                 dimensionStatus.bottomHeight === 'incorrect' ? 'border-red-500 bg-red-50' :
                                 'border-gray-300'
@@ -1273,7 +1198,7 @@ const Sphere = () => {
                               onChange={(e) => setDimensionInputs(prev => ({...prev, topLength: e.target.value}))}
                               onFocus={() => setFocusedInput('topLength')}
                               onBlur={() => setFocusedInput(null)}
-                              className={`w-full px-2 py-1 text-xs border rounded ${
+                              className={`w-16 px-2 py-1 text-xs border rounded ${
                                 dimensionStatus.topLength === 'correct' ? 'border-green-500 bg-green-50' :
                                 dimensionStatus.topLength === 'incorrect' ? 'border-red-500 bg-red-50' :
                                 'border-gray-300'
@@ -1290,7 +1215,7 @@ const Sphere = () => {
                               onChange={(e) => setDimensionInputs(prev => ({...prev, topWidth: e.target.value}))}
                               onFocus={() => setFocusedInput('topWidth')}
                               onBlur={() => setFocusedInput(null)}
-                              className={`w-full px-2 py-1 text-xs border rounded ${
+                              className={`w-16 px-2 py-1 text-xs border rounded ${
                                 dimensionStatus.topWidth === 'correct' ? 'border-green-500 bg-green-50' :
                                 dimensionStatus.topWidth === 'incorrect' ? 'border-red-500 bg-red-50' :
                                 'border-gray-300'
@@ -1307,7 +1232,7 @@ const Sphere = () => {
                               onChange={(e) => setDimensionInputs(prev => ({...prev, topHeight: e.target.value}))}
                               onFocus={() => setFocusedInput('topHeight')}
                               onBlur={() => setFocusedInput(null)}
-                              className={`w-full px-2 py-1 text-xs border rounded ${
+                              className={`w-16 px-2 py-1 text-xs border rounded ${
                                 dimensionStatus.topHeight === 'correct' ? 'border-green-500 bg-green-50' :
                                 dimensionStatus.topHeight === 'incorrect' ? 'border-red-500 bg-red-50' :
                                 'border-gray-300'
@@ -1534,7 +1459,7 @@ const Sphere = () => {
                             style={{ pointerEvents: 'auto' }}
                             aria-label="Back"
                           >
-                            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                            <span style={{ fontSize: '16px', fontWeight: 'bold' }}>&lt;</span>
                           </button>
                         </div>
                       </div>
@@ -1682,6 +1607,49 @@ const Sphere = () => {
         </CardContent>
         <CardFooter className="flex-col items-start bg-gray-50">
         </CardFooter>
+        
+        {/* Flexi Wave image in bottom left corner of the card */}
+        <div style={{
+          position: 'absolute',
+          bottom: '20px',
+          left: '20px',
+          zIndex: 1000,
+          pointerEvents: 'none'
+        }}>
+          <img 
+            src={import.meta.env.BASE_URL + 'Flexi_Wave.png'} 
+            alt="Flexi Wave" 
+            style={{ 
+              width: '100px', 
+              height: 'auto',
+              display: 'block'
+            }} 
+          />
+          {/* Message box for first page */}
+          {isCustomShape && !showCalculations && (
+            <div style={{
+              position: 'absolute',
+              bottom: '60px',
+              left: '110px',
+              backgroundColor: 'white',
+              border: '2px solid #008542',
+              borderRadius: '8px',
+              padding: '10px 14px',
+              fontSize: '14px',
+              fontWeight: '500',
+              color: '#008542',
+              whiteSpace: 'nowrap',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              pointerEvents: 'none'
+            }}>
+              {faceInputsVisible ? 
+                (currentFace === 1 ? 'Find the surface area of Face 1!' : 
+                 currentFace === 2 ? 'Find the surface area of Face 2 + 3!' : 
+                 'Find the surface area of Face 4!') : 
+                'Identify the dimensions of the two blocks!'}
+            </div>
+          )}
+        </div>
       </Card>
     </div>
   );
