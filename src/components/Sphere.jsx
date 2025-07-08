@@ -78,9 +78,9 @@ const Sphere = () => {
   const [focusedCalcBlock, setFocusedCalcBlock] = useState(null); // 'bottom' | 'top' | null
   const [focusedStep3, setFocusedStep3] = useState(false);
   const [faceInputsVisible, setFaceInputsVisible] = useState(false);
-  const [currentFace, setCurrentFace] = useState(1); // 1, 2, 4, or 5
-  const [faceInputs, setFaceInputs] = useState({ 1: '', 2: '', 4: '', 5: '' });
-  const [faceStatuses, setFaceStatuses] = useState({ 1: null, 2: null, 4: null, 5: null }); // 'correct' | 'incorrect' | null
+  const [currentFace, setCurrentFace] = useState(1); // 1, 2, 4, 5, 6, or 7
+  const [faceInputs, setFaceInputs] = useState({ 1: '', 2: '', 4: '', 5: '', 6: '', 7: '' });
+  const [faceStatuses, setFaceStatuses] = useState({ 1: null, 2: null, 4: null, 5: null, 6: null, 7: null }); // 'correct' | 'incorrect' | null
   // Highlight for Face-by-Face workflow
   const [focusedFace1, setFocusedFace1] = useState(false);
   // Highlight for Face 2+3 (backwards L side)
@@ -813,7 +813,7 @@ const Sphere = () => {
 
   const checkCurrentFace = () => {
     const val = parseFloat(faceInputs[currentFace]);
-    const expected = currentFace === 1 ? 21 : currentFace === 2 ? 28 : currentFace === 4 ? 14 : currentFace === 5 ? 14 : 0; // Face1:21, Face2+3:28 (14+14), Face4:14, Face5:14
+    const expected = currentFace === 1 ? 21 : currentFace === 2 ? 28 : currentFace === 4 ? 14 : currentFace === 5 ? 14 : currentFace === 6 ? 14 : currentFace === 7 ? 14 : 0; // Face1:21, Face2+3:28 (14+14), Face4:14, Face5:14, Face6:14, Face7:14
     setFaceStatuses(prev => ({ ...prev, [currentFace]: (!isNaN(val) && Math.abs(val - expected) < 0.0001) ? 'correct' : 'incorrect' }));
   };
 
@@ -822,6 +822,8 @@ const Sphere = () => {
   const isFace2Active = faceInputsVisible && currentFace === 2;
       const isFace4Active = faceInputsVisible && currentFace === 4;
       const isFace5Active = faceInputsVisible && currentFace === 5;
+      const isFace6Active = faceInputsVisible && currentFace === 6;
+      const isFace7Active = faceInputsVisible && currentFace === 7;
 
       // Hide hint line whenever user leaves Face 2+3
   useEffect(() => {
@@ -997,6 +999,20 @@ const Sphere = () => {
                     stroke="none"
                     style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                   />
+                  {/* Top horizontal 7x2 face of top block for Face 6 */}
+                  <polygon
+                    points="250,250 300,250 210,160 160,160"
+                    fill={isFace6Active ? 'rgba(89,83,240,0.18)' : 'transparent'}
+                    stroke="none"
+                    style={{ cursor: 'pointer', pointerEvents: 'auto' }}
+                  />
+                  {/* Left vertical 7x2 face of top block for Face 7 */}
+                  <polygon
+                    points="210,260 210,160 160,160 160,260"
+                    fill="transparent"
+                    stroke="none"
+                    style={{ cursor: 'pointer', pointerEvents: 'auto' }}
+                  />
 
                   {/* Dimension numbers for left/bottom rectangle */}
                   <text x="225" y="375" fill="#008542" fontSize="18" fontWeight="bold" textAnchor="middle">5</text> {/* length, front edge, both rectangles */}
@@ -1075,6 +1091,10 @@ const Sphere = () => {
                         setCurrentFace(4);
                       } else if (currentFace === 4) {
                         setCurrentFace(5);
+                      } else if (currentFace === 5) {
+                        setCurrentFace(6);
+                      } else if (currentFace === 6) {
+                        setCurrentFace(7);
                       }
                     }}
                     className="flex items-center justify-center"
@@ -1088,7 +1108,11 @@ const Sphere = () => {
                   <button
                     onClick={() => {
                       if (faceInputsVisible) {
-                        if (currentFace === 5) {
+                        if (currentFace === 7) {
+                          setCurrentFace(6);
+                        } else if (currentFace === 6) {
+                          setCurrentFace(5);
+                        } else if (currentFace === 5) {
                           setCurrentFace(4);
                         } else if (currentFace === 4) {
                           setCurrentFace(2);
@@ -1206,6 +1230,21 @@ const Sphere = () => {
                                   faceStatuses[1] === 'correct' ? '21 + ...' : ''
                                 ) :
                                 currentFace === 5 ? (
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' ? '21 + 28 + 14 + 14 + ...' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' ? '21 + 28 + 14 + ...' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' ? '21 + 28 + ...' :
+                                  faceStatuses[1] === 'correct' ? '21 + ...' : ''
+                                ) :
+                                currentFace === 6 ? (
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' ? '21 + 28 + 14 + 14 + 14 + ...' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' ? '21 + 28 + 14 + 14 + ...' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' ? '21 + 28 + 14 + ...' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' ? '21 + 28 + ...' :
+                                  faceStatuses[1] === 'correct' ? '21 + ...' : ''
+                                ) :
+                                currentFace === 7 ? (
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' && faceStatuses[7] === 'correct' ? '21 + 28 + 14 + 14 + 14 + 14 + ...' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' ? '21 + 28 + 14 + 14 + 14 + ...' :
                                   faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' ? '21 + 28 + 14 + 14 + ...' :
                                   faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' ? '21 + 28 + 14 + ...' :
                                   faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' ? '21 + 28 + ...' :
@@ -1821,7 +1860,9 @@ const Sphere = () => {
                      )
                    ) : 
                  currentFace === 4 ? 'Find the surface area of Face 4!' :
-                 currentFace === 5 ? 'Find the surface area of Face 5!' : '') : 
+                 currentFace === 5 ? 'Find the surface area of Face 5!' :
+                 currentFace === 6 ? 'Find the surface area of Face 6!' :
+                 currentFace === 7 ? 'Find the surface area of Face 7!' : '') : 
                   'Identify the dimensions of the two blocks!'}
           </div>
         </div>
