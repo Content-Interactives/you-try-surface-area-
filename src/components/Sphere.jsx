@@ -78,9 +78,9 @@ const Sphere = () => {
   const [focusedCalcBlock, setFocusedCalcBlock] = useState(null); // 'bottom' | 'top' | null
   const [focusedStep3, setFocusedStep3] = useState(false);
   const [faceInputsVisible, setFaceInputsVisible] = useState(false);
-  const [currentFace, setCurrentFace] = useState(1); // 1, 2, or 4
-  const [faceInputs, setFaceInputs] = useState({ 1: '', 2: '', 4: '' });
-  const [faceStatuses, setFaceStatuses] = useState({ 1: null, 2: null, 4: null }); // 'correct' | 'incorrect' | null
+  const [currentFace, setCurrentFace] = useState(1); // 1, 2, 4, or 5
+  const [faceInputs, setFaceInputs] = useState({ 1: '', 2: '', 4: '', 5: '' });
+  const [faceStatuses, setFaceStatuses] = useState({ 1: null, 2: null, 4: null, 5: null }); // 'correct' | 'incorrect' | null
   // Highlight for Face-by-Face workflow
   const [focusedFace1, setFocusedFace1] = useState(false);
   // Highlight for Face 2+3 (backwards L side)
@@ -652,15 +652,15 @@ const Sphere = () => {
 
     // Only check if all dimensions are correct if not skipping global check
     if (!skipGlobalCheck) {
-      const allCorrect = Object.keys(dimensionInputs).every(key => {
-        const expected = key.includes('bottom') ? 
+    const allCorrect = Object.keys(dimensionInputs).every(key => {
+      const expected = key.includes('bottom') ? 
           (key.includes('Length') ? 7 : key.includes('Width') ? 3 : 2) :
-          (key.includes('Length') ? 7 : key.includes('Width') ? 2 : 4);
-        return Math.abs(parseFloat(dimensionInputs[key] || 0) - expected) < 0.1;
-      });
+        (key.includes('Length') ? 7 : key.includes('Width') ? 2 : 4);
+      return Math.abs(parseFloat(dimensionInputs[key] || 0) - expected) < 0.1;
+    });
 
-      if (allCorrect) {
-        setDimensionsCompleted(true);
+    if (allCorrect) {
+      setDimensionsCompleted(true);
       }
     }
   };
@@ -813,7 +813,7 @@ const Sphere = () => {
 
   const checkCurrentFace = () => {
     const val = parseFloat(faceInputs[currentFace]);
-    const expected = currentFace === 1 ? 21 : currentFace === 2 ? 28 : 14; // Face1:21, Face2+3:28 (14+14), Face4:14
+    const expected = currentFace === 1 ? 21 : currentFace === 2 ? 28 : currentFace === 4 ? 14 : currentFace === 5 ? 14 : 0; // Face1:21, Face2+3:28 (14+14), Face4:14, Face5:14
     setFaceStatuses(prev => ({ ...prev, [currentFace]: (!isNaN(val) && Math.abs(val - expected) < 0.0001) ? 'correct' : 'incorrect' }));
   };
 
@@ -821,6 +821,7 @@ const Sphere = () => {
   const isFace1Active = faceInputsVisible && currentFace === 1;
   const isFace2Active = faceInputsVisible && currentFace === 2;
       const isFace4Active = faceInputsVisible && currentFace === 4;
+      const isFace5Active = faceInputsVisible && currentFace === 5;
 
       // Hide hint line whenever user leaves Face 2+3
   useEffect(() => {
@@ -856,7 +857,7 @@ const Sphere = () => {
               }}
             >
               <div style={{ position: 'relative', width: '500px', height: '500px' }}>
-                <svg width="500" height="500">
+                <svg width="500" height="500" style={{ transform: 'translateY(48px)' }}>
                   {/* Grid background removed */}
 
                   {/* Coordinate axes removed */}
@@ -989,6 +990,13 @@ const Sphere = () => {
                     stroke="none"
                     style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                   />
+                  {/* Right vertical 7x2 face of bottom block for Face 5 */}
+                  <polygon
+                    points="250,302.45 250,252.45 160,162.45 160,212.45"
+                    fill={isFace5Active ? 'rgba(89,83,240,0.18)' : 'transparent'}
+                    stroke="none"
+                    style={{ cursor: 'pointer', pointerEvents: 'auto' }}
+                  />
 
                   {/* Dimension numbers for left/bottom rectangle */}
                   <text x="225" y="375" fill="#008542" fontSize="18" fontWeight="bold" textAnchor="middle">5</text> {/* length, front edge, both rectangles */}
@@ -998,6 +1006,46 @@ const Sphere = () => {
                   {/* Dimension numbers for right/top rectangle */}
                   <text x="325" y="300" fill="transparent" fontSize="18" fontWeight="bold" textAnchor="middle"></text>
                   <text x="235" y="275" fill="#008542" fontSize="18" fontWeight="bold" textAnchor="middle">2</text> {/* height of top block, left vertical edge parallel to '1' */}
+
+                  {/* 3x2 text overlay for front horizontal face when Face 2+3 hint step 3 is active */}
+                  {currentFace === 2 && face2HintStep === 3 && (
+                    <text 
+                      x="200" 
+                      y="330" 
+                      fill="#FF6600" 
+                      fontSize="20" 
+                      fontWeight="bold" 
+                      textAnchor="middle"
+                      style={{ 
+                        pointerEvents: 'none',
+                        opacity: 0,
+                        animation: 'fadeInDelayed 0.5s ease-in-out 0.8s forwards'
+                      }}
+                    >
+                      3x2
+                    </text>
+                  )}
+
+                  {/* 4x2 text overlay for front vertical block when Face 2+3 hint step 3 is active */}
+                  {currentFace === 2 && face2HintStep === 3 && (
+                    <text 
+                      x="185" 
+                      y="210" 
+                      fill="#FF6600" 
+                      fontSize="20" 
+                      fontWeight="bold" 
+                      textAnchor="middle"
+                      style={{ 
+                        pointerEvents: 'none',
+                        opacity: 0,
+                        animation: 'fadeInDelayed 0.5s ease-in-out 0.8s forwards'
+                      }}
+                    >
+                      4x2
+                    </text>
+                  )}
+
+
 
                   {face2LineVisible && isFace2Active && (
                     <line
@@ -1025,6 +1073,8 @@ const Sphere = () => {
                         setCurrentFace(2);
                       } else if (currentFace === 2) {
                         setCurrentFace(4);
+                      } else if (currentFace === 4) {
+                        setCurrentFace(5);
                       }
                     }}
                     className="flex items-center justify-center"
@@ -1038,7 +1088,9 @@ const Sphere = () => {
                   <button
                     onClick={() => {
                       if (faceInputsVisible) {
-                        if (currentFace === 4) {
+                        if (currentFace === 5) {
+                          setCurrentFace(4);
+                        } else if (currentFace === 4) {
                           setCurrentFace(2);
                         } else if (currentFace === 2) {
                           setCurrentFace(1);
@@ -1137,6 +1189,30 @@ const Sphere = () => {
                                 Hint
                               </button>
                             )}
+                          </div>
+                          
+                          {/* Total surface area text under face inputs */}
+                          <div className="mt-2">
+                            <p className="text-xs text-gray-600">
+                              Total surface area: {
+                                currentFace === 1 ? (faceStatuses[1] === 'correct' ? '21 + ...' : '') :
+                                currentFace === 2 ? (
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' ? '21 + 28 + ...' :
+                                  faceStatuses[1] === 'correct' ? '21 + ...' : ''
+                                ) :
+                                currentFace === 4 ? (
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' ? '21 + 28 + 14 + ...' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' ? '21 + 28 + ...' :
+                                  faceStatuses[1] === 'correct' ? '21 + ...' : ''
+                                ) :
+                                currentFace === 5 ? (
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' ? '21 + 28 + 14 + 14 + ...' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' ? '21 + 28 + 14 + ...' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' ? '21 + 28 + ...' :
+                                  faceStatuses[1] === 'correct' ? '21 + ...' : ''
+                                ) : ''
+                              }
+                            </p>
                           </div>
                         </div>
                       )}
@@ -1688,56 +1764,64 @@ const Sphere = () => {
                 minWidth: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? '380px' : '200px'
               }}>
                 {faceInputsVisible ? 
-                  (currentFace === 1 ? 'Find the surface area of Face 1!' : 
-                                        currentFace === 2 ? (
-                       face2HintStep === 1 ? 'Find the surface area of Face 2 + 3!' :
-                       face2HintStep === 2 ? (
-                         <div>
-                           First, divide the shape into two blocks!
-                           <span 
-                             style={{ cursor: 'pointer', fontSize: '16px', marginLeft: '8px' }}
-                             onClick={() => setFace2HintStep(3)}
-                           >
-                             →
-                           </span>
-                         </div>
-                       ) :
-                       face2HintStep === 3 ? (
-                         <div>
-                           <span 
-                             style={{ cursor: 'pointer', fontSize: '16px', marginRight: '8px' }}
-                             onClick={() => setFace2HintStep(2)}
-                           >
-                             ←
-                           </span>
-                           Calculate the surface area of the two blocks and then add together!
-                           <span 
-                             style={{ cursor: 'pointer', fontSize: '16px', marginLeft: '8px' }}
-                             onClick={() => {
-                               setFace2HintStep(4);
-                               // Clear the timeout when reaching final step
-                               if (face2HintTimeout) {
-                                 clearTimeout(face2HintTimeout);
-                                 setFace2HintTimeout(null);
-                               }
-                             }}
-                           >
-                             →
-                           </span>
+                                    (currentFace === 1 ? 'Find the surface area of Face 1!' : 
+                   currentFace === 2 ? (
+                     face2HintStep === 1 ? 'Find the surface area of Face 2 + 3!' :
+                     face2HintStep === 2 ? (
+                       <div>
+                         First, divide the shape into two blocks!
+                         <span 
+                           style={{ cursor: 'pointer', fontSize: '16px', marginLeft: '8px' }}
+                           onClick={() => {
+                             setFace2HintStep(3);
+                             // Clear the timeout when navigating forward
+                             if (face2HintTimeout) {
+                               clearTimeout(face2HintTimeout);
+                               setFace2HintTimeout(null);
+                             }
+                           }}
+                         >
+                           →
+                         </span>
               </div>
-                       ) : (
-                         <div>
-                           <span 
-                             style={{ cursor: 'pointer', fontSize: '16px', marginRight: '8px' }}
-                             onClick={() => setFace2HintStep(3)}
-                           >
-                             ←
-                           </span>
-                           Lastly, multiply your previous answer by 2 since you have 2 L shape blocks!
-                </div>
-                       )
-                     ) : 
-                   'Find the surface area of Face 4!') : 
+                     ) :
+                     face2HintStep === 3 ? (
+                       <div>
+                         <span 
+                           style={{ cursor: 'pointer', fontSize: '16px', marginRight: '8px' }}
+                           onClick={() => setFace2HintStep(2)}
+                         >
+                           ←
+                         </span>
+                         Calculate the surface area of the two blocks and then add together!
+                         <span 
+                           style={{ cursor: 'pointer', fontSize: '16px', marginLeft: '8px' }}
+                           onClick={() => {
+                             setFace2HintStep(4);
+                             // Clear the timeout when reaching final step
+                             if (face2HintTimeout) {
+                               clearTimeout(face2HintTimeout);
+                               setFace2HintTimeout(null);
+                             }
+                           }}
+                         >
+                           →
+                         </span>
+            </div>
+                     ) : (
+                       <div>
+                         <span 
+                           style={{ cursor: 'pointer', fontSize: '16px', marginRight: '8px' }}
+                           onClick={() => setFace2HintStep(3)}
+                         >
+                           ←
+                         </span>
+                         Lastly, multiply your previous answer by 2 since you have 2 L shape blocks!
+              </div>
+                     )
+                   ) : 
+                 currentFace === 4 ? 'Find the surface area of Face 4!' :
+                 currentFace === 5 ? 'Find the surface area of Face 5!' : '') : 
                   'Identify the dimensions of the two blocks!'}
           </div>
         </div>
