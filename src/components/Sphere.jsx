@@ -78,12 +78,12 @@ const Sphere = () => {
   const [focusedCalcBlock, setFocusedCalcBlock] = useState(null); // 'bottom' | 'top' | null
   const [focusedStep3, setFocusedStep3] = useState(false);
   const [faceInputsVisible, setFaceInputsVisible] = useState(false);
-  const [currentFace, setCurrentFace] = useState(1); // 1, 2, or 3
-  const [faceInputs, setFaceInputs] = useState({ 1: '', 2: '', 3: '' });
-  const [faceStatuses, setFaceStatuses] = useState({ 1: null, 2: null, 3: null }); // 'correct' | 'incorrect' | null
+  const [currentFace, setCurrentFace] = useState(1); // 1, 2, or 4
+  const [faceInputs, setFaceInputs] = useState({ 1: '', 2: '', 4: '' });
+  const [faceStatuses, setFaceStatuses] = useState({ 1: null, 2: null, 4: null }); // 'correct' | 'incorrect' | null
   // Highlight for Face-by-Face workflow
   const [focusedFace1, setFocusedFace1] = useState(false);
-  // Highlight for Face 2 (backwards L side)
+  // Highlight for Face 2+3 (backwards L side)
   const [focusedFace2, setFocusedFace2] = useState(false);
   const [face2HintVisible, setFace2HintVisible] = useState(false);
   const [face2HintStep, setFace2HintStep] = useState(1); // 1 for first message, 2 for second message
@@ -206,7 +206,7 @@ const Sphere = () => {
       input[type="number"] {
         -moz-appearance: textfield;
       }
-      /* Animated dashed line for Face 2 hint (draw once, then stay) */
+      /* Animated dashed line for Face 2+3 hint (draw once, then stay) */
       .dash-animate {
         stroke-dasharray: 60;     /* path length */
         stroke-dashoffset: 60;    /* start hidden */
@@ -808,16 +808,16 @@ const Sphere = () => {
 
   const checkCurrentFace = () => {
     const val = parseFloat(faceInputs[currentFace]);
-    const expected = currentFace === 1 ? 21 : 14; // Face1:21, Face2:14, Face3:14 (same)
+    const expected = currentFace === 1 ? 21 : currentFace === 2 ? 28 : 14; // Face1:21, Face2+3:28 (14+14), Face4:14
     setFaceStatuses(prev => ({ ...prev, [currentFace]: (!isNaN(val) && Math.abs(val - expected) < 0.0001) ? 'correct' : 'incorrect' }));
   };
 
   // after isFace2Active const definition
   const isFace1Active = faceInputsVisible && currentFace === 1;
   const isFace2Active = faceInputsVisible && currentFace === 2;
-  const isFace3Active = faceInputsVisible && currentFace === 3;
+      const isFace4Active = faceInputsVisible && currentFace === 4;
 
-  // Hide hint line whenever user leaves Face 2
+      // Hide hint line whenever user leaves Face 2+3
   useEffect(() => {
     if (!isFace2Active) {
       setFace2HintVisible(false);
@@ -1017,7 +1017,7 @@ const Sphere = () => {
                   />
                   <polygon
                     points="150,350 150,300 60,210 60,260"
-                    fill={focusedCalcBlock === 'bottom' || focusedStep3 || isFace3Active ? 'rgba(89,83,240,0.18)' : 'transparent'}
+                    fill={focusedCalcBlock === 'bottom' || focusedStep3 || isFace4Active ? 'rgba(89,83,240,0.18)' : 'transparent'}
                     stroke="none"
                     style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                   />
@@ -1088,7 +1088,7 @@ const Sphere = () => {
                       } else if (currentFace === 1) {
                         setCurrentFace(2);
                       } else if (currentFace === 2) {
-                        setCurrentFace(3);
+                        setCurrentFace(4);
                       }
                     }}
                     className="flex items-center justify-center"
@@ -1102,7 +1102,7 @@ const Sphere = () => {
                   <button
                     onClick={() => {
                       if (faceInputsVisible) {
-                        if (currentFace === 3) {
+                        if (currentFace === 4) {
                           setCurrentFace(2);
                         } else if (currentFace === 2) {
                           setCurrentFace(1);
@@ -1138,7 +1138,7 @@ const Sphere = () => {
                       
                       {faceInputsVisible && (
                         <div className="space-y-2">
-                          <h4 className="font-semibold text-gray-800 text-sm">{`Face ${currentFace}`}</h4>
+                          <h4 className="font-semibold text-gray-800 text-sm">{`Face ${currentFace === 2 ? '2+3' : currentFace}`}</h4>
                           <div className="flex items-center gap-2">
                             <input
                               type="text"
@@ -1377,7 +1377,7 @@ const Sphere = () => {
                         
                         {faceInputsVisible && (
                           <div className="mb-4 p-3 rounded text-sm bg-blue-50 border border-blue-200">
-                            <h4 className="font-semibold text-gray-800 text-xs">{`Face ${currentFace}`}</h4>
+                            <h4 className="font-semibold text-gray-800 text-xs">{`Face ${currentFace === 2 ? '2+3' : currentFace}`}</h4>
                             <p className="text-xs text-gray-600 mb-2">Enter the area for face 1:</p>
                             <div className="flex items-center gap-2">
                               <input
