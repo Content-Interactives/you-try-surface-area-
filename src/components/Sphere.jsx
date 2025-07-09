@@ -78,9 +78,12 @@ const Sphere = () => {
   const [focusedCalcBlock, setFocusedCalcBlock] = useState(null); // 'bottom' | 'top' | null
   const [focusedStep3, setFocusedStep3] = useState(false);
   const [faceInputsVisible, setFaceInputsVisible] = useState(false);
-  const [currentFace, setCurrentFace] = useState(1); // 1, 2, 4, 5, 6, or 7
-  const [faceInputs, setFaceInputs] = useState({ 1: '', 2: '', 4: '', 5: '', 6: '', 7: '' });
-  const [faceStatuses, setFaceStatuses] = useState({ 1: null, 2: null, 4: null, 5: null, 6: null, 7: null }); // 'correct' | 'incorrect' | null
+  const [currentFace, setCurrentFace] = useState(1); // 1, 2, 4, 5, 6, 7, or 8
+  const [faceInputs, setFaceInputs] = useState({ 1: '', 2: '', 4: '', 5: '', 6: '', 7: '', 8: '' });
+  const [faceStatuses, setFaceStatuses] = useState({ 1: null, 2: null, 4: null, 5: null, 6: null, 7: null, 8: null }); // 'correct' | 'incorrect' | null
+  const [showTotalCalculation, setShowTotalCalculation] = useState(false);
+  const [totalSurfaceAreaInput, setTotalSurfaceAreaInput] = useState('');
+  const [totalSurfaceAreaStatus, setTotalSurfaceAreaStatus] = useState(null); // 'correct' | 'incorrect' | null
   // Highlight for Face-by-Face workflow
   const [focusedFace1, setFocusedFace1] = useState(false);
   // Highlight for Face 2+3 (backwards L side)
@@ -813,8 +816,14 @@ const Sphere = () => {
 
   const checkCurrentFace = () => {
     const val = parseFloat(faceInputs[currentFace]);
-    const expected = currentFace === 1 ? 21 : currentFace === 2 ? 28 : currentFace === 4 ? 14 : currentFace === 5 ? 14 : currentFace === 6 ? 14 : currentFace === 7 ? 14 : 0; // Face1:21, Face2+3:28 (14+14), Face4:14, Face5:14, Face6:14, Face7:14
+    const expected = currentFace === 1 ? 21 : currentFace === 2 ? 28 : currentFace === 4 ? 14 : currentFace === 5 ? 14 : currentFace === 6 ? 14 : currentFace === 7 ? 28 : currentFace === 8 ? 35 : 0; // Face1:21, Face2+3:28 (14+14), Face4:14, Face5:14, Face6:14, Face7:28, Face8:35
     setFaceStatuses(prev => ({ ...prev, [currentFace]: (!isNaN(val) && Math.abs(val - expected) < 0.0001) ? 'correct' : 'incorrect' }));
+  };
+
+  const checkTotalSurfaceArea = () => {
+    const val = parseFloat(totalSurfaceAreaInput);
+    const expected = 21 + 28 + 14 + 14 + 14 + 28 + 35; // Sum of all face areas = 154
+    setTotalSurfaceAreaStatus((!isNaN(val) && Math.abs(val - expected) < 0.0001) ? 'correct' : 'incorrect');
   };
 
   // after isFace2Active const definition
@@ -824,6 +833,7 @@ const Sphere = () => {
       const isFace5Active = faceInputsVisible && currentFace === 5;
       const isFace6Active = faceInputsVisible && currentFace === 6;
       const isFace7Active = faceInputsVisible && currentFace === 7;
+      const isFace8Active = faceInputsVisible && currentFace === 8;
 
       // Hide hint line whenever user leaves Face 2+3
   useEffect(() => {
@@ -866,7 +876,7 @@ const Sphere = () => {
 
                   {/* 3D Rectangle at (2,2) with isometric projection */}
                   {/* First box (2 units wide, 1 unit tall, 3 units deep) */}
-                  <polyline points="150,350 250,350" fill="none" stroke="#008542" strokeWidth="2" />
+                  <polyline points="150,350 250,350" fill="none" stroke={(isFace8Active && !showTotalCalculation) ? '#5953F0' : '#008542'} strokeWidth={(isFace8Active && !showTotalCalculation) ? 4 : 2} />
                   {/* Keep diagonal line from (0.2, 3.8) to (2,2) but remove horizontal segment from (0.2, 3.8) to (2.2, 3.8) */}
                   <polyline points="60,260 150,350" fill="none" stroke="#008542" strokeWidth="2" />
                   <polyline points="150,300 250,300 160,210 60,210 150,300" fill="none" stroke="#008542" strokeWidth="2" />
@@ -877,7 +887,7 @@ const Sphere = () => {
 
                   {/* Second box (1 unit wide, 2 units tall, 3 units deep) for staircase effect */}
                   {/* Base rectangle */}
-                  <line x1="250" y1="350" x2="300" y2="350" stroke="#008542" strokeWidth="2" />
+                  <line x1="250" y1="350" x2="300" y2="350" stroke={(isFace8Active && !showTotalCalculation) ? '#5953F0' : '#008542'} strokeWidth={(isFace8Active && !showTotalCalculation) ? 4 : 2} />
                   {/* Removed diagonal line from (5,2) to (4,3) - removed line from 300,350 to 210,260 */}
                   {/* Removed horizontal line from (0, 3.8) to (3.2, 3.8) - removed line from 160,260 to 210,260 */}
                   {/* Removed diagonal line from (4,2) to (2.3, 3.7) - no line connects 250,350 to 160,260 */}
@@ -896,8 +906,8 @@ const Sphere = () => {
                   <polyline
                     points="60,260 150,350"
                     fill="none"
-                    stroke={focusedInput === 'bottomLength' ? '#5953F0' : '#008542'}
-                    strokeWidth={focusedInput === 'bottomLength' ? 4 : 2}
+                    stroke={focusedInput === 'bottomLength' || (isFace8Active && !showTotalCalculation) ? '#5953F0' : '#008542'}
+                    strokeWidth={focusedInput === 'bottomLength' || (isFace8Active && !showTotalCalculation) ? 4 : 2}
                     style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                   />
                   {/* Bottom Block: Width (3) - top back edge */}
@@ -920,8 +930,8 @@ const Sphere = () => {
                   <polyline
                     points="210,160 300,250"
                     fill="none"
-                    stroke={focusedInput === 'topLength' ? '#5953F0' : '#008542'}
-                    strokeWidth={focusedInput === 'topLength' ? 4 : 2}
+                    stroke={focusedInput === 'topLength' || (isFace7Active && !showTotalCalculation) ? '#5953F0' : '#008542'}
+                    strokeWidth={focusedInput === 'topLength' || (isFace7Active && !showTotalCalculation) ? 4 : 2}
                     style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                   />
                   {/* Top Block: Width (2) - top back edge */}
@@ -936,8 +946,8 @@ const Sphere = () => {
                   <polyline
                     points="300,250 300,350"
                     fill="none"
-                    stroke={focusedInput === 'topHeight' ? '#5953F0' : '#008542'}
-                    strokeWidth={focusedInput === 'topHeight' ? 4 : 2}
+                    stroke={focusedInput === 'topHeight' || (isFace7Active && !showTotalCalculation) ? '#5953F0' : '#008542'}
+                    strokeWidth={focusedInput === 'topHeight' || (isFace7Active && !showTotalCalculation) ? 4 : 2}
                     style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                   />
 
@@ -1095,10 +1105,14 @@ const Sphere = () => {
                         setCurrentFace(6);
                       } else if (currentFace === 6) {
                         setCurrentFace(7);
+                      } else if (currentFace === 7) {
+                        setCurrentFace(8);
+                      } else if (currentFace === 8) {
+                        setShowTotalCalculation(true);
                       }
                     }}
                     className="flex items-center justify-center"
-                    style={{ position: 'absolute', right: '30px', bottom: '30px', width: '30px', height: '30px', backgroundColor: '#008542', color: '#fff', borderRadius: '6px', pointerEvents: 'auto' }}
+                    style={{ position: 'absolute', right: '30px', bottom: '30px', width: '30px', height: '30px', backgroundColor: '#008542', color: '#fff', borderRadius: '6px', pointerEvents: 'auto', display: showTotalCalculation ? 'none' : 'flex' }}
                     aria-label="Forward"
                   >
                     <span style={{ fontSize: '18px', fontWeight: 'bold' }}>&gt;</span>
@@ -1107,8 +1121,13 @@ const Sphere = () => {
                   {/* Back button (always visible). Disabled on the first calculations page */}
                   <button
                     onClick={() => {
-                      if (faceInputsVisible) {
-                        if (currentFace === 7) {
+                      if (showTotalCalculation) {
+                        setShowTotalCalculation(false);
+                        setCurrentFace(8);
+                      } else if (faceInputsVisible) {
+                        if (currentFace === 8) {
+                          setCurrentFace(7);
+                        } else if (currentFace === 7) {
                           setCurrentFace(6);
                         } else if (currentFace === 6) {
                           setCurrentFace(5);
@@ -1124,7 +1143,7 @@ const Sphere = () => {
                       }
                     }}
                     className="flex items-center justify-center"
-                    style={{ position: 'absolute', right: '70px', bottom: '30px', width: '30px', height: '30px', backgroundColor: '#008542', color: '#fff', borderRadius: '6px', opacity: faceInputsVisible ? 1 : 0.4, pointerEvents: faceInputsVisible ? 'auto' : 'none' }}
+                    style={{ position: 'absolute', right: '70px', bottom: '30px', width: '30px', height: '30px', backgroundColor: '#008542', color: '#fff', borderRadius: '6px', opacity: (faceInputsVisible || showTotalCalculation) ? 1 : 0.4, pointerEvents: (faceInputsVisible || showTotalCalculation) ? 'auto' : 'none' }}
                     aria-label="Back"
                   >
                     <span style={{ fontSize: '18px', fontWeight: 'bold' }}>&lt;</span>
@@ -1148,7 +1167,35 @@ const Sphere = () => {
                     <div className="space-y-4">
                       {/* Remove mascot image from here if present */}
                       
-                      {faceInputsVisible && (
+                      {showTotalCalculation ? (
+                        <div className="space-y-2">
+                          <h4 className="font-semibold text-gray-800 text-sm">Calculate Total Surface Area</h4>
+                          <p className="text-xs text-gray-600 mb-2">Total surface area: 21 + 28 + 14 + 14 + 14 + 28 + 35</p>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="text"
+                              value={totalSurfaceAreaInput}
+                              onChange={(e) => setTotalSurfaceAreaInput(e.target.value)}
+                              className={`w-24 px-2 py-1 text-xs border rounded ${
+                                totalSurfaceAreaStatus === 'correct' ? 'border-green-500 bg-green-50' :
+                                totalSurfaceAreaStatus === 'incorrect' ? 'border-red-500 bg-red-50' :
+                                'border-gray-300'
+                              }`}
+                              placeholder="?"
+                              style={{ pointerEvents: 'auto' }}
+                            />
+                            <button
+                              className="px-2 py-1 text-white rounded text-xs"
+                              style={{ backgroundColor: '#ff9533', borderColor: '#ff9533', pointerEvents: 'auto' }}
+                              onMouseOver={e => e.currentTarget.style.backgroundColor = '#e6842d'}
+                              onMouseOut={e => e.currentTarget.style.backgroundColor = '#ff9533'}
+                              onClick={checkTotalSurfaceArea}
+                            >
+                              Check
+                            </button>
+                          </div>
+                        </div>
+                      ) : faceInputsVisible && (
                       <div className="space-y-2">
                           <h4 className="font-semibold text-gray-800 text-sm">{`Face ${currentFace === 2 ? '2+3' : currentFace}`}</h4>
                           <div className="flex items-center gap-2">
@@ -1243,7 +1290,23 @@ const Sphere = () => {
                                   faceStatuses[1] === 'correct' ? '21 + ...' : ''
                                 ) :
                                 currentFace === 7 ? (
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' && faceStatuses[7] === 'correct' ? '21 + 28 + 14 + 14 + 14 + 14 + ...' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' && faceStatuses[7] === 'correct' ? '21 + 28 + 14 + 14 + 14 + 28 + ...' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' ? '21 + 28 + 14 + 14 + 14 + ...' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' ? '21 + 28 + 14 + 14 + ...' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' ? '21 + 28 + 14 + ...' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' ? '21 + 28 + ...' :
+                                  faceStatuses[1] === 'correct' ? '21 + ...' : ''
+                                ) : currentFace === 8 ? (
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' && faceStatuses[7] === 'correct' && faceStatuses[8] === 'correct' ? '21 + 28 + 14 + 14 + 14 + 28 + 35' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' && faceStatuses[7] === 'correct' ? '21 + 28 + 14 + 14 + 14 + 28 + ...' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' ? '21 + 28 + 14 + 14 + 14 + ...' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' ? '21 + 28 + 14 + 14 + ...' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' ? '21 + 28 + 14 + ...' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' ? '21 + 28 + ...' :
+                                  faceStatuses[1] === 'correct' ? '21 + ...' : ''
+                                ) : showTotalCalculation ? (
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' && faceStatuses[7] === 'correct' && faceStatuses[8] === 'correct' ? '21 + 28 + 14 + 14 + 14 + 28 + 35 = ?' :
+                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' && faceStatuses[7] === 'correct' ? '21 + 28 + 14 + 14 + 14 + 28 + ...' :
                                   faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' ? '21 + 28 + 14 + 14 + 14 + ...' :
                                   faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' ? '21 + 28 + 14 + 14 + ...' :
                                   faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' ? '21 + 28 + 14 + ...' :
@@ -1441,7 +1504,23 @@ const Sphere = () => {
                           </div>
                         </div>
                         
-                        {faceInputsVisible && (
+                        {showTotalCalculation ? (
+                          <div className="mb-4 p-3 rounded text-sm bg-blue-50 border border-blue-200">
+                            <h4 className="font-semibold text-gray-800 text-xs">Calculate Total Surface Area</h4>
+                            <p className="text-xs text-gray-600 mb-2">Total surface area: 21 + 28 + 14 + 14 + 14 + 28 + 35</p>
+                            <p className="text-xs text-gray-600 mb-2">Enter the total surface area:</p>
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="text"
+                                value={totalSurfaceAreaInput}
+                                onChange={(e) => setTotalSurfaceAreaInput(e.target.value)}
+                                className="w-16 px-2 py-1 text-xs border rounded border-gray-300"
+                                placeholder="?"
+                                style={{ pointerEvents: 'auto' }}
+                              />
+                            </div>
+                          </div>
+                        ) : faceInputsVisible && (
                           <div className="mb-4 p-3 rounded text-sm bg-blue-50 border border-blue-200">
                             <h4 className="font-semibold text-gray-800 text-xs">{`Face ${currentFace === 2 ? '2+3' : currentFace}`}</h4>
                             <p className="text-xs text-gray-600 mb-2">Enter the area for face 1:</p>
@@ -1802,7 +1881,8 @@ const Sphere = () => {
                 textAlign: 'center',
                 minWidth: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? '380px' : '200px'
               }}>
-                {faceInputsVisible ? 
+                {showTotalCalculation ? 'Add up all the face areas to find the total surface area!' : 
+                 faceInputsVisible ? 
                                     (currentFace === 1 ? 'Find the surface area of Face 1!' : 
                    currentFace === 2 ? (
                      face2HintStep === 1 ? 'Find the surface area of Face 2 + 3!' :
@@ -1822,7 +1902,7 @@ const Sphere = () => {
                          >
                            →
                          </span>
-              </div>
+                </div>
                      ) :
                      face2HintStep === 3 ? (
                        <div>
@@ -1846,7 +1926,7 @@ const Sphere = () => {
                          >
                            →
                          </span>
-            </div>
+              </div>
                      ) : (
                        <div>
                          <span 
@@ -1856,13 +1936,14 @@ const Sphere = () => {
                            ←
                          </span>
                          Lastly, multiply your previous answer by 2 since you have 2 L shape blocks!
-              </div>
+                </div>
                      )
                    ) : 
                  currentFace === 4 ? 'Find the surface area of Face 4!' :
                  currentFace === 5 ? 'Find the surface area of Face 5!' :
                  currentFace === 6 ? 'Find the surface area of Face 6!' :
-                 currentFace === 7 ? 'Find the surface area of Face 7!' : '') : 
+                 currentFace === 7 ? 'Find the surface area of Face 7!' :
+                 currentFace === 8 ? 'Find the surface area of Face 8!' : '') :
                   'Identify the dimensions of the two blocks!'}
           </div>
         </div>
