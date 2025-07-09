@@ -1159,10 +1159,6 @@ const Sphere = () => {
                 marginTop: !dimensionsCompleted ? '80px' : '-160px' 
               }}>
                 <div className="p-4">
-                  {(!dimensionsCompleted) && (
-                    <h3 className="text-lg font-bold text-gray-800 mb-3">Calculations</h3>
-                  )}
-                  
                   {!dimensionsCompleted ? (
                     <div className="space-y-4">
                       {/* Remove mascot image from here if present */}
@@ -1881,7 +1877,7 @@ const Sphere = () => {
                 textAlign: 'center',
                 minWidth: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? '380px' : '200px'
               }}>
-                {showTotalCalculation ? 'Add up all the face areas to find the total surface area!' : 
+                {showTotalCalculation ? 'Add up all the face areas!' : 
                  faceInputsVisible ? 
                                     (currentFace === 1 ? 'Find the surface area of Face 1!' : 
                    currentFace === 2 ? (
