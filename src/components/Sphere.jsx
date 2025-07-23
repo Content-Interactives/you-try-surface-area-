@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+;import React, { useState, useEffect } from 'react';
 import { Calculator, Lightbulb, Check, X } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '../components/ui/alert';
 import { Slider } from '../components/ui/slider';
@@ -86,7 +86,7 @@ const Sphere = () => {
   const [totalSurfaceAreaStatus, setTotalSurfaceAreaStatus] = useState(null); // 'correct' | 'incorrect' | null
   // Highlight for Face-by-Face workflow
   const [focusedFace1, setFocusedFace1] = useState(false);
-  // Highlight for Face 2+3 (backwards L side)
+  // Highlight for Face 2 + 3 (backwards L side)
   const [focusedFace2, setFocusedFace2] = useState(false);
   const [face2HintVisible, setFace2HintVisible] = useState(false);
   const [face2HintStep, setFace2HintStep] = useState(1); // 1 for first message, 2 for second message
@@ -212,7 +212,7 @@ const Sphere = () => {
       input[type="number"] {
         -moz-appearance: textfield;
       }
-      /* Animated dashed line for Face 2+3 hint (draw once, then stay) */
+      /* Animated dashed line for Face 2 + 3 hint (draw once, then stay) */
       .dash-animate {
         stroke-dasharray: 60;     /* path length */
         stroke-dashoffset: 60;    /* start hidden */
@@ -816,7 +816,7 @@ const Sphere = () => {
 
   const checkCurrentFace = () => {
     const val = parseFloat(faceInputs[currentFace]);
-    const expected = currentFace === 1 ? 21 : currentFace === 2 ? 28 : currentFace === 4 ? 14 : currentFace === 5 ? 14 : currentFace === 6 ? 14 : currentFace === 7 ? 28 : currentFace === 8 ? 35 : 0; // Face1:21, Face2+3:28 (14+14), Face4:14, Face5:14, Face6:14, Face7:28, Face8:35
+    const expected = currentFace === 1 ? 21 : currentFace === 2 ? 28 : currentFace === 4 ? 14 : currentFace === 5 ? 14 : currentFace === 6 ? 14 : currentFace === 7 ? 28 : currentFace === 8 ? 35 : 0; // Face1:21, Face2 + 3:28 (14+14), Face4:14, Face5:14, Face6:14, Face7:28, Face8:35
     setFaceStatuses(prev => ({ ...prev, [currentFace]: (!isNaN(val) && Math.abs(val - expected) < 0.0001) ? 'correct' : 'incorrect' }));
   };
 
@@ -835,7 +835,7 @@ const Sphere = () => {
       const isFace7Active = faceInputsVisible && currentFace === 7;
       const isFace8Active = faceInputsVisible && currentFace === 8;
 
-      // Hide hint line whenever user leaves Face 2+3
+      // Hide hint line whenever user leaves Face 2 + 3
   useEffect(() => {
     if (!isFace2Active) {
       setFace2HintVisible(false);
@@ -849,27 +849,41 @@ const Sphere = () => {
   }, [isFace2Active, face2HintTimeout]);
 
   return (
-    <div className="bg-gray-100 p-8 min-h-screen">
+    <div className="bg-gray-100 p-4 md:p-8 min-h-screen">
       <Card className="w-full max-w-2xl mx-auto shadow-md bg-white" style={{ position: 'relative' }}>
-        <div style={{ padding: '24px 24px 0 24px' }}>
+        <div className="mobile-container" style={{ padding: '16px 16px 0 16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '1.5rem', fontWeight: 400, color: '#008542' }}>Surface Area of the 3D Staircase</span>
+            <span className="mobile-title" style={{ fontSize: '1.25rem', fontWeight: 400, color: '#008542' }}>Surface Area of the 3D Staircase</span>
           </div>
 
           {isCustomShape && (
             <div
-              className="space-y-4 flex items-center justify-center"
+              className={`space-y-4 flex flex-col lg:flex-row items-center justify-center mobile-main-layout ${showCalculations ? 'calculations' : ''}`}
               style={{
                 position: 'relative',
                 width: '100%',
-                height: '500px',
-                marginTop: showCalculations ? '-6rem' : '-9rem', // Move container 0.5rem further up
+                height: 'auto',
+                minHeight: '400px',
+                marginTop: showCalculations ? '-3rem' : '-4rem',
                 padding: '16px',
                 boxSizing: 'border-box'
               }}
             >
-              <div style={{ position: 'relative', width: '500px', height: '500px' }}>
-                <svg width="500" height="500" style={{ transform: 'translateY(48px)' }}>
+              <div className="mobile-svg-container" style={{ 
+                position: 'relative', 
+                width: '100%', 
+                maxWidth: '500px',
+                height: 'auto',
+                minHeight: '300px'
+              }}>
+                <svg 
+                  width="100%" 
+                  height="100%" 
+                  viewBox="0 0 500 500" 
+                  className="mobile-svg"
+                  style={{ transform: 'translateY(24px)' }}
+                  preserveAspectRatio="xMidYMid meet"
+                >
                   {/* Grid background removed */}
 
                   {/* Coordinate axes removed */}
@@ -1033,7 +1047,7 @@ const Sphere = () => {
                   <text x="325" y="300" fill="transparent" fontSize="18" fontWeight="bold" textAnchor="middle"></text>
                   <text x="235" y="275" fill="#008542" fontSize="18" fontWeight="bold" textAnchor="middle">2</text> {/* height of top block, left vertical edge parallel to '1' */}
 
-                  {/* 3x2 text overlay for front horizontal face when Face 2+3 hint step 3 is active */}
+                  {/* 3x2 text overlay for front horizontal face when Face 2 + 3 hint step 3 is active */}
                   {currentFace === 2 && face2HintStep === 3 && (
                     <text 
                       x="200" 
@@ -1052,7 +1066,7 @@ const Sphere = () => {
                     </text>
                   )}
 
-                  {/* 4x2 text overlay for front vertical block when Face 2+3 hint step 3 is active */}
+                  {/* 4x2 text overlay for front vertical block when Face 2 + 3 hint step 3 is active */}
                   {currentFace === 2 && face2HintStep === 3 && (
                     <text 
                       x="185" 
@@ -1090,33 +1104,48 @@ const Sphere = () => {
               {!showCalculations && (
                 <>
                   {/* Forward button (always visible). Active only on the first calculations page */}
-                  <button
-                    onClick={() => {
-                      if (!faceInputsVisible) {
-                        setFaceInputsVisible(true);
-                        setCurrentFace(1);
-                      } else if (currentFace === 1) {
-                        setCurrentFace(2);
-                      } else if (currentFace === 2) {
-                        setCurrentFace(4);
-                      } else if (currentFace === 4) {
-                        setCurrentFace(5);
-                      } else if (currentFace === 5) {
-                        setCurrentFace(6);
-                      } else if (currentFace === 6) {
-                        setCurrentFace(7);
-                      } else if (currentFace === 7) {
-                        setCurrentFace(8);
-                      } else if (currentFace === 8) {
-                        setShowTotalCalculation(true);
-                      }
-                    }}
-                    className="flex items-center justify-center"
-                    style={{ position: 'absolute', right: '30px', bottom: '30px', width: '30px', height: '30px', backgroundColor: '#008542', color: '#fff', borderRadius: '6px', pointerEvents: 'auto', display: showTotalCalculation ? 'none' : 'flex' }}
-                    aria-label="Forward"
-                  >
-                    <span style={{ fontSize: '18px', fontWeight: 'bold' }}>&gt;</span>
-                  </button>
+                                        <button
+                        onClick={() => {
+                          console.log('Forward button clicked!');
+                          if (!faceInputsVisible) {
+                            setFaceInputsVisible(true);
+                            setCurrentFace(1);
+                          } else if (currentFace === 1) {
+                            setCurrentFace(2);
+                          } else if (currentFace === 2) {
+                            setCurrentFace(4);
+                          } else if (currentFace === 4) {
+                            setCurrentFace(5);
+                          } else if (currentFace === 5) {
+                            setCurrentFace(6);
+                          } else if (currentFace === 6) {
+                            setCurrentFace(7);
+                          } else if (currentFace === 7) {
+                            setCurrentFace(8);
+                          } else if (currentFace === 8) {
+                            setShowTotalCalculation(true);
+                          }
+                        }}
+                        className="flex items-center justify-center mobile-nav-forward"
+                        style={{ 
+                          position: 'absolute', 
+                          right: '15px', 
+                          top: '60px', 
+                          width: '32px', 
+                          height: '32px', 
+                          backgroundColor: '#008542', 
+                          color: '#fff', 
+                          borderRadius: '6px', 
+                          pointerEvents: 'auto', 
+                          display: showTotalCalculation ? 'none' : 'flex',
+                          zIndex: 1000,
+                          cursor: 'pointer',
+                          touchAction: 'manipulation'
+                        }}
+                        aria-label="Forward"
+                      >
+                        <span style={{ fontSize: '18px', fontWeight: 'bold' }}>&gt;</span>
+                      </button>
 
                   {/* Back button (always visible). Disabled on the first calculations page */}
                   <button
@@ -1142,8 +1171,22 @@ const Sphere = () => {
                         }
                       }
                     }}
-                    className="flex items-center justify-center"
-                    style={{ position: 'absolute', right: '70px', bottom: '30px', width: '30px', height: '30px', backgroundColor: '#008542', color: '#fff', borderRadius: '6px', opacity: (faceInputsVisible || showTotalCalculation) ? 1 : 0.4, pointerEvents: (faceInputsVisible || showTotalCalculation) ? 'auto' : 'none' }}
+                    className="flex items-center justify-center mobile-nav-back"
+                    style={{ 
+                      position: 'absolute', 
+                      right: '52px', 
+                      top: '60px', 
+                      width: '32px', 
+                      height: '32px', 
+                      backgroundColor: '#008542', 
+                      color: '#fff', 
+                      borderRadius: '6px', 
+                      opacity: (faceInputsVisible || showTotalCalculation) ? 1 : 0.4, 
+                      pointerEvents: (faceInputsVisible || showTotalCalculation) ? 'auto' : 'none',
+                      zIndex: 1000,
+                      cursor: 'pointer',
+                      touchAction: 'manipulation'
+                    }}
                     aria-label="Back"
                   >
                     <span style={{ fontSize: '18px', fontWeight: 'bold' }}>&lt;</span>
@@ -1152,11 +1195,11 @@ const Sphere = () => {
               )}
               
               {/* Calculations Section */}
-              <div className="w-80 space-y-4" style={{ 
+              <div className="mobile-calculations w-full max-w-sm lg:w-80 space-y-4" style={{ 
                 position: 'relative', 
                 zIndex: 100, 
-                marginLeft: '-150px', 
-                marginTop: !dimensionsCompleted ? '80px' : '-160px' 
+                marginLeft: '0',
+                marginTop: !dimensionsCompleted ? '20px' : '20px'
               }}>
                 <div className="p-4">
                   {!dimensionsCompleted ? (
@@ -1181,8 +1224,14 @@ const Sphere = () => {
                               style={{ pointerEvents: 'auto' }}
                             />
                             <button
-                              className="px-2 py-1 text-white rounded text-xs"
-                              style={{ backgroundColor: '#ff9533', borderColor: '#ff9533', pointerEvents: 'auto' }}
+                              className="mobile-button px-3 py-2 text-white rounded text-sm"
+                              style={{ 
+                                backgroundColor: '#ff9533', 
+                                borderColor: '#ff9533', 
+                                pointerEvents: 'auto',
+                                minHeight: '44px',
+                                touchAction: 'manipulation'
+                              }}
                               onMouseOver={e => e.currentTarget.style.backgroundColor = '#e6842d'}
                               onMouseOut={e => e.currentTarget.style.backgroundColor = '#ff9533'}
                               onClick={checkTotalSurfaceArea}
@@ -1210,7 +1259,7 @@ const Sphere = () => {
                                 setFocusedFace1(false);
                                 setFocusedFace2(false);
                               }}
-                              className={`w-24 px-2 py-1 text-xs border rounded ${
+                              className={`mobile-input w-24 px-2 py-1 text-xs border rounded ${
                                 faceStatuses[currentFace] === 'correct' ? 'border-green-500 bg-green-50' :
                                 faceStatuses[currentFace] === 'incorrect' ? 'border-red-500 bg-red-50' :
                                 'border-gray-300'
@@ -1219,11 +1268,20 @@ const Sphere = () => {
                               style={{ pointerEvents: 'auto' }}
                             />
                             <button
-                              className="px-2 py-1 text-white rounded text-xs"
-                              style={{ backgroundColor: '#ff9533', borderColor: '#ff9533', pointerEvents: 'auto' }}
+                              className="mobile-button px-3 py-2 text-white rounded text-sm"
+                              style={{ 
+                                backgroundColor: '#ff9533', 
+                                borderColor: '#ff9533', 
+                                pointerEvents: 'auto',
+                                minHeight: '44px',
+                                touchAction: 'manipulation'
+                              }}
                               onMouseOver={e => e.currentTarget.style.backgroundColor = '#e6842d'}
                               onMouseOut={e => e.currentTarget.style.backgroundColor = '#ff9533'}
-                              onClick={checkCurrentFace}
+                              onClick={() => {
+                                console.log('Check button clicked!');
+                                checkCurrentFace();
+                              }}
                             >
                               Check
                             </button>
@@ -1372,8 +1430,14 @@ const Sphere = () => {
                           </div>
                         </div>
                         <button 
-                          className="w-full px-2 py-1 text-white rounded text-xs"
-                          style={{ backgroundColor: '#ff9533', borderColor: '#ff9533', pointerEvents: 'auto' }}
+                          className="mobile-button w-full px-3 py-2 text-white rounded text-sm"
+                          style={{ 
+                            backgroundColor: '#ff9533', 
+                            borderColor: '#ff9533', 
+                            pointerEvents: 'auto',
+                            minHeight: '44px',
+                            touchAction: 'manipulation'
+                          }}
                           onMouseOver={e => e.currentTarget.style.backgroundColor = '#e6842d'}
                           onMouseOut={e => e.currentTarget.style.backgroundColor = '#ff9533'}
                           onClick={() => {
@@ -1442,9 +1506,15 @@ const Sphere = () => {
                             />
                           </div>
                         </div>
-                        <button 
-                          className="w-full px-2 py-1 text-white rounded text-xs"
-                          style={{ backgroundColor: '#ff9533', borderColor: '#ff9533', pointerEvents: 'auto' }}
+                                                <button 
+                          className="mobile-button w-full px-3 py-2 text-white rounded text-sm"
+                          style={{ 
+                            backgroundColor: '#ff9533', 
+                            borderColor: '#ff9533', 
+                            pointerEvents: 'auto',
+                            minHeight: '44px',
+                            touchAction: 'manipulation'
+                          }}
                           onMouseOver={e => e.currentTarget.style.backgroundColor = '#e6842d'}
                           onMouseOut={e => e.currentTarget.style.backgroundColor = '#ff9533'}
                           onClick={() => {
@@ -1454,7 +1524,7 @@ const Sphere = () => {
                           }}
                         >
                           Check
-                          </button>
+                        </button>
                       </div>
                     </div>
                   ) : !showCalculations ? (
@@ -1557,8 +1627,14 @@ const Sphere = () => {
                               onBlur={() => setFocusedCalcBlock(null)}
                             />
                             <button 
-                              className="px-2 py-1 text-white rounded text-xs"
-                              style={{ backgroundColor: '#ff9533', borderColor: '#ff9533', pointerEvents: 'auto' }}
+                              className="mobile-button px-3 py-2 text-white rounded text-sm"
+                              style={{ 
+                                backgroundColor: '#ff9533', 
+                                borderColor: '#ff9533', 
+                                pointerEvents: 'auto',
+                                minHeight: '44px',
+                                touchAction: 'manipulation'
+                              }}
                               onMouseOver={e => e.currentTarget.style.backgroundColor = '#e6842d'}
                               onMouseOut={e => e.currentTarget.style.backgroundColor = '#ff9533'}
                               onClick={() => checkCalculationStep('step1Result', 62)}
@@ -1833,36 +1909,36 @@ const Sphere = () => {
         </CardFooter>
         
         {/* Flexi Wave image in bottom left corner of the card */}
-        <div style={{
+        <div className="mobile-flexi" style={{
           position: 'absolute',
-          bottom: '20px',
-          left: '20px',
-            zIndex: 1000,
+          bottom: '10px',
+          left: '10px',
+          zIndex: 1000,
           pointerEvents: 'none'
         }}>
           <img 
             src={import.meta.env.BASE_URL + 'Flexi_Wave.png'} 
             alt="Flexi Wave" 
-                style={{
-              width: '100px', 
+            style={{
+              width: '60px',
               height: 'auto',
               display: 'block'
             }} 
           />
           {/* Message box for first page */}
           {isCustomShape && !showCalculations && (
-            <div style={{
-                      position: 'absolute',
-              bottom: '60px',
-              left: '110px',
+            <div className="mobile-speech-bubble" style={{
+              position: 'absolute',
+              bottom: '40px',
+              left: '70px',
               perspective: '1000px'
             }}>
-              <div               style={{
+              <div className={`mobile-speech-bubble ${(currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? 'expanded' : ''}`} style={{
                 backgroundColor: 'white',
                 border: '2px solid #008542',
                 borderRadius: '8px',
-                padding: '10px 14px',
-                fontSize: '14px',
+                padding: '8px 10px',
+                fontSize: '12px',
                 fontWeight: '500',
                 color: '#008542',
                 whiteSpace: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? 'pre-line' : 'nowrap',
@@ -1870,12 +1946,12 @@ const Sphere = () => {
                 pointerEvents: (currentFace === 2 && face2HintStep >= 2 && face2HintStep <= 4) ? 'auto' : 'none',
                 transformStyle: 'preserve-3d',
                 animation: (faceInputsVisible && currentFace === 2 && face2MessageFlipping) ? 'flipUp 0.6s ease-in-out' : 'none',
-                height: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? '60px' : '44px',
-                      display: 'flex',
-                      alignItems: 'center',
+                height: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? '50px' : '36px',
+                display: 'flex',
+                alignItems: 'center',
                 justifyContent: 'center',
                 textAlign: 'center',
-                minWidth: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? '380px' : '200px'
+                minWidth: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? '280px' : '150px'
               }}>
                 {showTotalCalculation ? 'Add up all the face areas!' : 
                  faceInputsVisible ? 
