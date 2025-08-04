@@ -1224,12 +1224,12 @@ const Sphere = () => {
                               style={{ pointerEvents: 'auto' }}
                             />
                             <button
-                              className="mobile-button px-3 py-2 text-white rounded text-sm"
+                              className="mobile-button px-2 py-1 text-white rounded text-sm"
                               style={{ 
                                 backgroundColor: '#ff9533', 
                                 borderColor: '#ff9533', 
                                 pointerEvents: 'auto',
-                                minHeight: '44px',
+                                minHeight: '32px',
                                 touchAction: 'manipulation'
                               }}
                               onMouseOver={e => e.currentTarget.style.backgroundColor = '#e6842d'}
@@ -1268,12 +1268,12 @@ const Sphere = () => {
                               style={{ pointerEvents: 'auto' }}
                             />
                             <button
-                              className="mobile-button px-3 py-2 text-white rounded text-sm"
+                              className="mobile-button px-2 py-1 text-white rounded text-sm"
                               style={{ 
                                 backgroundColor: '#ff9533', 
                                 borderColor: '#ff9533', 
                                 pointerEvents: 'auto',
-                                minHeight: '44px',
+                                minHeight: '32px',
                                 touchAction: 'manipulation'
                               }}
                               onMouseOver={e => e.currentTarget.style.backgroundColor = '#e6842d'}
@@ -1430,12 +1430,12 @@ const Sphere = () => {
                           </div>
                         </div>
                         <button 
-                          className="mobile-button w-full px-3 py-2 text-white rounded text-sm"
+                          className="mobile-button w-full px-2 py-1 text-white rounded text-sm"
                           style={{ 
                             backgroundColor: '#ff9533', 
                             borderColor: '#ff9533', 
                             pointerEvents: 'auto',
-                            minHeight: '44px',
+                            minHeight: '32px',
                             touchAction: 'manipulation'
                           }}
                           onMouseOver={e => e.currentTarget.style.backgroundColor = '#e6842d'}
@@ -1507,12 +1507,12 @@ const Sphere = () => {
                           </div>
                         </div>
                                                 <button 
-                          className="mobile-button w-full px-3 py-2 text-white rounded text-sm"
+                          className="mobile-button w-full px-2 py-1 text-white rounded text-sm"
                           style={{ 
                             backgroundColor: '#ff9533', 
                             borderColor: '#ff9533', 
                             pointerEvents: 'auto',
-                            minHeight: '44px',
+                            minHeight: '32px',
                             touchAction: 'manipulation'
                           }}
                           onMouseOver={e => e.currentTarget.style.backgroundColor = '#e6842d'}
@@ -1589,7 +1589,7 @@ const Sphere = () => {
                         ) : faceInputsVisible && (
                           <div className="mb-4 p-3 rounded text-sm bg-blue-50 border border-blue-200">
                             <h4 className="font-semibold text-gray-800 text-xs">{`Face ${currentFace === 2 ? '2+3' : currentFace}`}</h4>
-                            <p className="text-xs text-gray-600 mb-2">Enter the area for face 1:</p>
+                            <p className="text-xs text-gray-600 mb-2">Enter the area for this face:</p>
                             <div className="flex items-center gap-2">
                               <input
                                 type="text"
@@ -1627,12 +1627,12 @@ const Sphere = () => {
                               onBlur={() => setFocusedCalcBlock(null)}
                             />
                             <button 
-                              className="mobile-button px-3 py-2 text-white rounded text-sm"
+                              className="mobile-button px-2 py-1 text-white rounded text-sm"
                               style={{ 
                                 backgroundColor: '#ff9533', 
                                 borderColor: '#ff9533', 
                                 pointerEvents: 'auto',
-                                minHeight: '44px',
+                                minHeight: '32px',
                                 touchAction: 'manipulation'
                               }}
                               onMouseOver={e => e.currentTarget.style.backgroundColor = '#e6842d'}
@@ -1955,9 +1955,9 @@ const Sphere = () => {
               }}>
                 {showTotalCalculation ? 'Add up all the face areas!' : 
                  faceInputsVisible ? 
-                                    (currentFace === 1 ? 'Find the surface area of Face 1!' : 
+                                    (currentFace === 1 ? "Let's calculate the area of Face 1!" : 
                    currentFace === 2 ? (
-                     face2HintStep === 1 ? 'Find the surface area of Face 2 + 3!' :
+                     face2HintStep === 1 ? 'Figure out the combined area of Faces 2 & 3!' :
                      face2HintStep === 2 ? (
                        <div>
                          First, divide the shape into two blocks!
@@ -2011,11 +2011,11 @@ const Sphere = () => {
                 </div>
                      )
                    ) : 
-                 currentFace === 4 ? 'Find the surface area of Face 4!' :
-                 currentFace === 5 ? 'Find the surface area of Face 5!' :
-                 currentFace === 6 ? 'Find the surface area of Face 6!' :
-                 currentFace === 7 ? 'Find the surface area of Face 7!' :
-                 currentFace === 8 ? 'Find the surface area of Face 8!' : '') :
+                 currentFace === 4 ? 'Now compute the area of Face 4.' :
+                 currentFace === 5 ? 'Determine the area for Face 5.' :
+                 currentFace === 6 ? "Can you work out Face 6's area?" :
+                 currentFace === 7 ? 'Almost there – find Face 7\'s area.' :
+                 currentFace === 8 ? 'Finish strong with the area of Face 8!' : '') :
                   'Identify the dimensions of the two blocks!'}
           </div>
         </div>
