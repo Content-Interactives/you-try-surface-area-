@@ -1135,7 +1135,7 @@ const Sphere = () => {
                           height: '32px', 
                           backgroundColor: '#008542', 
                           color: '#fff', 
-                          borderRadius: '6px', 
+                          borderRadius: '50%', 
                           pointerEvents: 'auto', 
                           display: showTotalCalculation ? 'none' : 'flex',
                           zIndex: 1000,
@@ -1144,7 +1144,7 @@ const Sphere = () => {
                         }}
                         aria-label="Forward"
                       >
-                        <span style={{ fontSize: '18px', fontWeight: 'bold' }}>&gt;</span>
+                        <span style={{ fontSize: '12px', fontWeight: 500 }}>&gt;</span>
                       </button>
 
                   {/* Back button (always visible). Disabled on the first calculations page */}
@@ -1180,7 +1180,7 @@ const Sphere = () => {
                       height: '32px', 
                       backgroundColor: '#008542', 
                       color: '#fff', 
-                      borderRadius: '6px', 
+                      borderRadius: '50%', 
                       opacity: (faceInputsVisible || showTotalCalculation) ? 1 : 0.4, 
                       pointerEvents: (faceInputsVisible || showTotalCalculation) ? 'auto' : 'none',
                       zIndex: 1000,
@@ -1189,7 +1189,7 @@ const Sphere = () => {
                     }}
                     aria-label="Back"
                   >
-                    <span style={{ fontSize: '18px', fontWeight: 'bold' }}>&lt;</span>
+                    <span style={{ fontSize: '12px', fontWeight: 500 }}>&lt;</span>
                   </button>
                 </>
               )}
@@ -1759,7 +1759,7 @@ const Sphere = () => {
                             style={{ pointerEvents: 'auto' }}
                             aria-label="Back"
                           >
-                            <span style={{ fontSize: '16px', fontWeight: 'bold' }}>&lt;</span>
+                            <span style={{ fontSize: '12px', fontWeight: 500 }}>&lt;</span>
                           </button>
                         </div>
                       </div>
