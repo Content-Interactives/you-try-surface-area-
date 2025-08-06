@@ -221,6 +221,36 @@ const Sphere = () => {
       @keyframes dashDraw {
         to { stroke-dashoffset: 0; }
       }
+      /* ==================================== */
+      /* "Check" buttons unified styling      */
+      /* ==================================== */
+      .mobile-button {
+        background-image: linear-gradient(135deg, #ffa34d 0%, #ff9533 100%);
+        color: #ffffff;
+        font-size: 0.75rem;      /* text-xs */
+        font-weight: 600;        /* semibold */
+        padding: 6px 12px;       /* px-3 py-1.5 */
+        width: 80px;             /* w-20 for consistency */
+        border: none;
+        border-radius: 8px;      /* rounded */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+      }
+
+      .mobile-button:hover,
+      .mobile-button:focus {
+        background-color: #e6842d;  /* slightly darker on hover */
+        box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      }
+
+      .mobile-button:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
     `;
     document.head.appendChild(style);
     return () => {
@@ -1376,7 +1406,7 @@ const Sphere = () => {
                       {/* Bottom Block Dimensions */}
                       <div className="space-y-2" style={{ display: faceInputsVisible ? 'none' : 'block' }}>
                         <h4 className="font-semibold text-gray-800 text-sm">Bottom Block:</h4>
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-3 gap-4">
                           <div>
                             <label className="text-xs text-gray-600">Length:</label>
                             <input
@@ -1385,7 +1415,7 @@ const Sphere = () => {
                               onChange={(e) => setDimensionInputs(prev => ({...prev, bottomLength: e.target.value}))}
                               onFocus={() => setFocusedInput('bottomLength')}
                               onBlur={() => setFocusedInput(null)}
-                              className={`w-16 px-2 py-1 text-xs border rounded ${
+                              className={`w-14 px-2 py-1 text-xs border rounded ${
                                 dimensionStatus.bottomLength === 'correct' ? 'border-green-500 bg-green-50' :
                                 dimensionStatus.bottomLength === 'incorrect' ? 'border-red-500 bg-red-50' :
                                 'border-gray-300'
@@ -1402,7 +1432,7 @@ const Sphere = () => {
                               onChange={(e) => setDimensionInputs(prev => ({...prev, bottomWidth: e.target.value}))}
                               onFocus={() => setFocusedInput('bottomWidth')}
                               onBlur={() => setFocusedInput(null)}
-                              className={`w-16 px-2 py-1 text-xs border rounded ${
+                              className={`w-14 px-2 py-1 text-xs border rounded ${
                                 dimensionStatus.bottomWidth === 'correct' ? 'border-green-500 bg-green-50' :
                                 dimensionStatus.bottomWidth === 'incorrect' ? 'border-red-500 bg-red-50' :
                                 'border-gray-300'
@@ -1419,7 +1449,7 @@ const Sphere = () => {
                               onChange={(e) => setDimensionInputs(prev => ({...prev, bottomHeight: e.target.value}))}
                               onFocus={() => setFocusedInput('bottomHeight')}
                               onBlur={() => setFocusedInput(null)}
-                              className={`w-16 px-2 py-1 text-xs border rounded ${
+                              className={`w-14 px-2 py-1 text-xs border rounded ${
                                 dimensionStatus.bottomHeight === 'correct' ? 'border-green-500 bg-green-50' :
                                 dimensionStatus.bottomHeight === 'incorrect' ? 'border-red-500 bg-red-50' :
                                 'border-gray-300'
@@ -1453,7 +1483,7 @@ const Sphere = () => {
                       {/* Top Block Dimensions */}
                       <div className="space-y-2" style={{ display: faceInputsVisible ? 'none' : 'block' }}>
                         <h4 className="font-semibold text-gray-800 text-sm">Top Block:</h4>
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-3 gap-4">
                           <div>
                             <label className="text-xs text-gray-600">Length:</label>
                             <input
@@ -1462,7 +1492,7 @@ const Sphere = () => {
                               onChange={(e) => setDimensionInputs(prev => ({...prev, topLength: e.target.value}))}
                               onFocus={() => setFocusedInput('topLength')}
                               onBlur={() => setFocusedInput(null)}
-                              className={`w-16 px-2 py-1 text-xs border rounded ${
+                              className={`w-14 px-2 py-1 text-xs border rounded ${
                                 dimensionStatus.topLength === 'correct' ? 'border-green-500 bg-green-50' :
                                 dimensionStatus.topLength === 'incorrect' ? 'border-red-500 bg-red-50' :
                                 'border-gray-300'
@@ -1479,7 +1509,7 @@ const Sphere = () => {
                               onChange={(e) => setDimensionInputs(prev => ({...prev, topWidth: e.target.value}))}
                               onFocus={() => setFocusedInput('topWidth')}
                               onBlur={() => setFocusedInput(null)}
-                              className={`w-16 px-2 py-1 text-xs border rounded ${
+                              className={`w-14 px-2 py-1 text-xs border rounded ${
                                 dimensionStatus.topWidth === 'correct' ? 'border-green-500 bg-green-50' :
                                 dimensionStatus.topWidth === 'incorrect' ? 'border-red-500 bg-red-50' :
                                 'border-gray-300'
@@ -1496,7 +1526,7 @@ const Sphere = () => {
                               onChange={(e) => setDimensionInputs(prev => ({...prev, topHeight: e.target.value}))}
                               onFocus={() => setFocusedInput('topHeight')}
                               onBlur={() => setFocusedInput(null)}
-                              className={`w-16 px-2 py-1 text-xs border rounded ${
+                              className={`w-14 px-2 py-1 text-xs border rounded ${
                                 dimensionStatus.topHeight === 'correct' ? 'border-green-500 bg-green-50' :
                                 dimensionStatus.topHeight === 'incorrect' ? 'border-red-500 bg-red-50' :
                                 'border-gray-300'
