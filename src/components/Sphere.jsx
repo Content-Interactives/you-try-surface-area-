@@ -230,7 +230,7 @@ const Sphere = () => {
         font-size: 0.75rem;      /* text-xs */
         font-weight: 600;        /* semibold */
         padding: 6px 12px;       /* px-3 py-1.5 */
-        width: 80px;             /* w-20 for consistency */
+        width: 60px;             /* smaller width */
         border: none;
         border-radius: 8px;      /* rounded */
         display: flex;
@@ -881,9 +881,9 @@ const Sphere = () => {
   return (
     <div className="bg-gray-100 p-4 md:p-8 min-h-screen">
       <Card className="w-full max-w-2xl mx-auto shadow-md bg-white" style={{ position: 'relative' }}>
-        <div className="mobile-container" style={{ padding: '16px 16px 0 16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span className="mobile-title" style={{ fontSize: '1.25rem', fontWeight: 400, color: '#008542' }}>Surface Area of the 3D Staircase</span>
+        <div className="mobile-container" style={{ padding: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <h4 className="font-semibold text-gray-600 text-2xl mt-4">Surface Area: 3D Staircase</h4>
           </div>
 
           {isCustomShape && (
@@ -894,9 +894,10 @@ const Sphere = () => {
                 width: '100%',
                 height: 'auto',
                 minHeight: '400px',
-                marginTop: showCalculations ? '-3rem' : '-4rem',
-                padding: '16px',
-                boxSizing: 'border-box'
+                marginTop: '-3rem',
+                padding: '8px',
+                boxSizing: 'border-box',
+                marginBottom: '0rem',
               }}
             >
               <div className="mobile-svg-container" style={{ 
@@ -1228,7 +1229,7 @@ const Sphere = () => {
               <div className="mobile-calculations w-full max-w-sm lg:w-80 space-y-4" style={{ 
                 position: 'relative', 
                 zIndex: 100, 
-                marginLeft: '0',
+                marginLeft: '-4rem',
                 marginTop: !dimensionsCompleted ? '20px' : '20px'
               }}>
                 <div className="p-4">
@@ -1239,7 +1240,6 @@ const Sphere = () => {
                       {showTotalCalculation ? (
                         <div className="space-y-2">
                           <h4 className="font-semibold text-gray-800 text-sm">Calculate Total Surface Area</h4>
-                          <p className="text-xs text-gray-600 mb-2">Total surface area: 21 + 28 + 14 + 14 + 14 + 28 + 35</p>
                           <div className="flex items-center gap-2">
                             <input
                               type="text"
@@ -1349,7 +1349,7 @@ const Sphere = () => {
                           {/* Total surface area text under face inputs */}
                           <div className="mt-2">
                             <p className="text-xs text-gray-600">
-                              Total surface area: {
+                              {
                                 currentFace === 1 ? (faceStatuses[1] === 'correct' ? '21 + ...' : '') :
                                 currentFace === 2 ? (
                                   faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' ? '21 + 28 + ...' :
@@ -1603,7 +1603,6 @@ const Sphere = () => {
                         {showTotalCalculation ? (
                           <div className="mb-4 p-3 rounded text-sm bg-blue-50 border border-blue-200">
                             <h4 className="font-semibold text-gray-800 text-xs">Calculate Total Surface Area</h4>
-                            <p className="text-xs text-gray-600 mb-2">Total surface area: 21 + 28 + 14 + 14 + 14 + 28 + 35</p>
                             <p className="text-xs text-gray-600 mb-2">Enter the total surface area:</p>
                             <div className="flex items-center gap-2">
                               <input
