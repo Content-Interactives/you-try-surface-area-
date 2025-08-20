@@ -251,10 +251,18 @@ const Sphere = () => {
         transform: scale(0.95);
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       }
+      /* Mobile Flexi positioning */
+      .mobile-flexi {
+        bottom: -3px !important;
+      }
+      /* Extend interactive box on mobile to contain Flexi's feet */
+      .mobile-main-layout {
+        padding-bottom: 20px !important;
+      }
       /* Responsive Flexi positioning for desktop */
       @media (min-width: 768px) {
         .mobile-flexi {
-          bottom: 80px !important;
+          bottom: 40px !important;
         }
         .mobile-flexi img {
           width: 80px !important;
@@ -264,6 +272,10 @@ const Sphere = () => {
           font-size: 14px !important;
           padding: 10px 12px !important;
           min-width: 180px !important;
+        }
+        /* Remove extra padding on desktop */
+        .mobile-main-layout {
+          padding-bottom: 8px !important;
         }
       }
     `;
@@ -912,7 +924,7 @@ const Sphere = () => {
                 marginTop: '-3rem',
                 padding: '8px',
                 boxSizing: 'border-box',
-                marginBottom: '0rem',
+                marginBottom: '-3rem',
               }}
             >
               <div className="mobile-svg-container" style={{ 
@@ -1955,7 +1967,7 @@ const Sphere = () => {
         {/* Flexi Wave image in bottom left corner of the card */}
         <div className="mobile-flexi" style={{
           position: 'absolute',
-          bottom: '10px',
+          bottom: '-3px',
           left: '10px',
           zIndex: 1000,
           pointerEvents: 'none'
@@ -1979,12 +1991,12 @@ const Sphere = () => {
             }}>
               <div className={`mobile-speech-bubble ${(currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? 'expanded' : ''}`} style={{
                 backgroundColor: 'white',
-                border: '2px solid #008542',
+                border: '1px solid #e5e7eb',
                 borderRadius: '8px',
                 padding: '8px 10px',
                 fontSize: '12px',
                 fontWeight: '500',
-                color: '#008542',
+                color: '#333333',
                 whiteSpace: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? 'pre-line' : 'nowrap',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                 pointerEvents: (currentFace === 2 && face2HintStep >= 2 && face2HintStep <= 4) ? 'auto' : 'none',
