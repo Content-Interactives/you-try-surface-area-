@@ -251,6 +251,21 @@ const Sphere = () => {
         transform: scale(0.95);
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       }
+      /* Responsive Flexi positioning for desktop */
+      @media (min-width: 768px) {
+        .mobile-flexi {
+          bottom: 80px !important;
+        }
+        .mobile-flexi img {
+          width: 80px !important;
+          height: auto !important;
+        }
+        .mobile-speech-bubble {
+          font-size: 14px !important;
+          padding: 10px 12px !important;
+          min-width: 180px !important;
+        }
+      }
     `;
     document.head.appendChild(style);
     return () => {
