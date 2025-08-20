@@ -86,7 +86,7 @@ const Sphere = () => {
   const [totalSurfaceAreaStatus, setTotalSurfaceAreaStatus] = useState(null); // 'correct' | 'incorrect' | null
   // Highlight for Face-by-Face workflow
   const [focusedFace1, setFocusedFace1] = useState(false);
-  // Highlight for Face 2 + 3 (backwards L side)
+      // Highlight for Faces 2 & 3 (backwards L side)
   const [focusedFace2, setFocusedFace2] = useState(false);
   const [face2HintVisible, setFace2HintVisible] = useState(false);
   const [face2HintStep, setFace2HintStep] = useState(1); // 1 for first message, 2 for second message
@@ -212,7 +212,7 @@ const Sphere = () => {
       input[type="number"] {
         -moz-appearance: textfield;
       }
-      /* Animated dashed line for Face 2 + 3 hint (draw once, then stay) */
+      /* Animated dashed line for Faces 2 & 3 hint (draw once, then stay) */
       .dash-animate {
         stroke-dasharray: 60;     /* path length */
         stroke-dashoffset: 60;    /* start hidden */
@@ -892,7 +892,7 @@ const Sphere = () => {
       const isFace7Active = faceInputsVisible && currentFace === 7;
       const isFace8Active = faceInputsVisible && currentFace === 8;
 
-      // Hide hint line whenever user leaves Face 2 + 3
+              // Hide hint line whenever user leaves Faces 2 & 3
   useEffect(() => {
     if (!isFace2Active) {
       setFace2HintVisible(false);
@@ -910,7 +910,7 @@ const Sphere = () => {
       <Card className="w-full max-w-2xl mx-auto shadow-md bg-white" style={{ position: 'relative' }}>
         <div className="mobile-container" style={{ padding: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <h4 className="font-semibold text-gray-800 text-2xl mt-4">Surface Area: 3D Staircase</h4>
+            <h4 className="font-medium text-3xl mt-4" style={{ color: '#008542' }}>Surface Area: 3D Staircase</h4>
           </div>
 
           {isCustomShape && (
@@ -1105,7 +1105,7 @@ const Sphere = () => {
                   <text x="325" y="300" fill="transparent" fontSize="18" fontWeight="bold" textAnchor="middle"></text>
                   <text x="235" y="275" fill="#008542" fontSize="18" fontWeight="bold" textAnchor="middle">2</text> {/* height of top block, left vertical edge parallel to '1' */}
 
-                  {/* 3x2 text overlay for front horizontal face when Face 2 + 3 hint step 3 is active */}
+                  {/* 3x2 text overlay for front horizontal face when Faces 2 & 3 hint step 3 is active */}
                   {currentFace === 2 && face2HintStep === 3 && (
                     <text 
                       x="200" 
@@ -1124,7 +1124,7 @@ const Sphere = () => {
                     </text>
                   )}
 
-                  {/* 4x2 text overlay for front vertical block when Face 2 + 3 hint step 3 is active */}
+                  {/* 4x2 text overlay for front vertical block when Faces 2 & 3 hint step 3 is active */}
                   {currentFace === 2 && face2HintStep === 3 && (
                     <text 
                       x="185" 
