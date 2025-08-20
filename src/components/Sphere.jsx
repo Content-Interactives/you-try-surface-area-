@@ -898,7 +898,7 @@ const Sphere = () => {
       <Card className="w-full max-w-2xl mx-auto shadow-md bg-white" style={{ position: 'relative' }}>
         <div className="mobile-container" style={{ padding: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <h4 className="font-semibold text-gray-600 text-2xl mt-4">Surface Area: 3D Staircase</h4>
+            <h4 className="font-semibold text-gray-800 text-2xl mt-4">Surface Area: 3D Staircase</h4>
           </div>
 
           {isCustomShape && (
