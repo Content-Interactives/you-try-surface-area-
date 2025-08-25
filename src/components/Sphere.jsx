@@ -278,6 +278,29 @@ const Sphere = () => {
           padding-bottom: 8px !important;
         }
       }
+      
+      /* Mobile-specific speech bubble positioning */
+      @media (max-width: 767px) {
+        .mobile-speech-bubble {
+          bottom: 15px !important;
+          left: 70px !important;
+          max-width: calc(100vw - 90px) !important;
+          min-width: 200px !important;
+          font-size: 11px !important;
+          padding: 6px 8px !important;
+        }
+        .mobile-speech-bubble.expanded {
+          bottom: 20px !important;
+          left: 75px !important;
+          max-width: calc(100vw - 110px) !important;
+          min-width: 180px !important;
+          font-size: 10px !important;
+          padding: 4px 6px !important;
+        }
+        .mobile-flexi {
+          left: 5px !important;
+        }
+      }
     `;
     document.head.appendChild(style);
     return () => {
@@ -1985,7 +2008,7 @@ const Sphere = () => {
           {isCustomShape && !showCalculations && (
             <div className="mobile-speech-bubble" style={{
               position: 'absolute',
-              bottom: '40px',
+              bottom: '2px',
               left: '70px',
               perspective: '1000px'
             }}>
@@ -2002,12 +2025,12 @@ const Sphere = () => {
                 pointerEvents: (currentFace === 2 && face2HintStep >= 2 && face2HintStep <= 4) ? 'auto' : 'none',
                 transformStyle: 'preserve-3d',
                 animation: (faceInputsVisible && currentFace === 2 && face2MessageFlipping) ? 'flipUp 0.6s ease-in-out' : 'none',
-                height: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? '50px' : '36px',
+                height: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? (face2HintStep === 4 ? '65px' : face2HintStep === 3 ? '55px' : '50px') : '36px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 textAlign: 'center',
-                minWidth: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? '280px' : '150px'
+                minWidth: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? (face2HintStep === 4 ? '320px' : face2HintStep === 3 ? '280px' : '250px') : '150px'
               }}>
                 {showTotalCalculation ? 'Add up all the face areas!' : 
                  faceInputsVisible ? 
@@ -2040,7 +2063,7 @@ const Sphere = () => {
                          >
                            ←
                          </span>
-                         Calculate the surface area of the two blocks and then add together!
+                         Find each block's surface area, then add!
                          <span 
                            style={{ cursor: 'pointer', fontSize: '16px', marginLeft: '8px' }}
                            onClick={() => {
@@ -2063,7 +2086,7 @@ const Sphere = () => {
                          >
                            ←
                          </span>
-                         Lastly, multiply your previous answer by 2 since you have 2 L shape blocks!
+                         Multiply by 2 for 2 L shape blocks!
                 </div>
                      )
                    ) : 
