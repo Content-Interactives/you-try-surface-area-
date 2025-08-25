@@ -1412,60 +1412,7 @@ const Sphere = () => {
                             )}
                           </div>
                           
-                          {/* Total surface area text under face inputs */}
-                          <div className="mt-2">
-                            <p className="text-xs text-gray-600">
-                              {
-                                currentFace === 1 ? (faceStatuses[1] === 'correct' ? '21 + ...' : '') :
-                                currentFace === 2 ? (
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' ? '21 + 28 + ...' :
-                                  faceStatuses[1] === 'correct' ? '21 + ...' : ''
-                                ) :
-                                currentFace === 4 ? (
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' ? '21 + 28 + 14 + ...' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' ? '21 + 28 + ...' :
-                                  faceStatuses[1] === 'correct' ? '21 + ...' : ''
-                                ) :
-                                currentFace === 5 ? (
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' ? '21 + 28 + 14 + 14 + ...' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' ? '21 + 28 + 14 + ...' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' ? '21 + 28 + ...' :
-                                  faceStatuses[1] === 'correct' ? '21 + ...' : ''
-                                ) :
-                                currentFace === 6 ? (
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' ? '21 + 28 + 14 + 14 + 14 + ...' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' ? '21 + 28 + 14 + 14 + ...' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' ? '21 + 28 + 14 + ...' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' ? '21 + 28 + ...' :
-                                  faceStatuses[1] === 'correct' ? '21 + ...' : ''
-                                ) :
-                                currentFace === 7 ? (
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' && faceStatuses[7] === 'correct' ? '21 + 28 + 14 + 14 + 14 + 28 + ...' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' ? '21 + 28 + 14 + 14 + 14 + ...' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' ? '21 + 28 + 14 + 14 + ...' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' ? '21 + 28 + 14 + ...' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' ? '21 + 28 + ...' :
-                                  faceStatuses[1] === 'correct' ? '21 + ...' : ''
-                                ) : currentFace === 8 ? (
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' && faceStatuses[7] === 'correct' && faceStatuses[8] === 'correct' ? '21 + 28 + 14 + 14 + 14 + 28 + 35' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' && faceStatuses[7] === 'correct' ? '21 + 28 + 14 + 14 + 14 + 28 + ...' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' ? '21 + 28 + 14 + 14 + 14 + ...' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' ? '21 + 28 + 14 + 14 + ...' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' ? '21 + 28 + 14 + ...' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' ? '21 + 28 + ...' :
-                                  faceStatuses[1] === 'correct' ? '21 + ...' : ''
-                                ) : showTotalCalculation ? (
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' && faceStatuses[7] === 'correct' && faceStatuses[8] === 'correct' ? '21 + 28 + 14 + 14 + 14 + 28 + 35 = ?' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' && faceStatuses[7] === 'correct' ? '21 + 28 + 14 + 14 + 14 + 28 + ...' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' && faceStatuses[6] === 'correct' ? '21 + 28 + 14 + 14 + 14 + ...' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' && faceStatuses[5] === 'correct' ? '21 + 28 + 14 + 14 + ...' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' && faceStatuses[4] === 'correct' ? '21 + 28 + 14 + ...' :
-                                  faceStatuses[1] === 'correct' && faceStatuses[2] === 'correct' ? '21 + 28 + ...' :
-                                  faceStatuses[1] === 'correct' ? '21 + ...' : ''
-                                ) : ''
-                              }
-                            </p>
-                          </div>
+
                         </div>
                       )}
                       
