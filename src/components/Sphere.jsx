@@ -2053,10 +2053,10 @@ const Sphere = () => {
                 </div>
                      )
                    ) : 
-                 currentFace === 4 ? 'Now compute the area of Face 4.' :
-                 currentFace === 5 ? 'Determine the area for Face 5.' :
+                 currentFace === 4 ? 'Now compute the area of Face 4!' :
+                 currentFace === 5 ? 'Determine the area for Face 5!' :
                  currentFace === 6 ? "Can you work out Face 6's area?" :
-                 currentFace === 7 ? 'Almost there – find Face 7\'s area.' :
+                 currentFace === 7 ? 'Almost there – find Face 7\'s area!' :
                  currentFace === 8 ? 'Finish strong with the area of Face 8!' : '') :
                   'Identify the dimensions of the two blocks!'}
           </div>
