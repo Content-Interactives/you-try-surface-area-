@@ -285,17 +285,17 @@ const Sphere = () => {
           bottom: 15px !important;
           left: 70px !important;
           max-width: calc(100vw - 90px) !important;
-          min-width: 200px !important;
+          min-width: 160px !important;
           font-size: 11px !important;
-          padding: 6px 8px !important;
+          padding: 4px 6px !important;
         }
         .mobile-speech-bubble.expanded {
           bottom: 20px !important;
           left: 75px !important;
           max-width: calc(100vw - 110px) !important;
-          min-width: 180px !important;
+          min-width: 140px !important;
           font-size: 10px !important;
-          padding: 4px 6px !important;
+          padding: 3px 5px !important;
         }
         .mobile-flexi {
           left: 5px !important;
@@ -1322,7 +1322,7 @@ const Sphere = () => {
                         </div>
                       ) : faceInputsVisible && (
                       <div className="space-y-2">
-                          <h4 className="font-semibold text-gray-800 text-sm">{`Face ${currentFace === 2 ? '2+3' : currentFace}`}</h4>
+                          <h4 className="font-semibold text-gray-800 text-sm">{`Face ${currentFace === 2 ? '2 & 3' : currentFace}`}</h4>
                           <div className="flex items-center gap-2">
                             <input
                               type="text"
@@ -2025,12 +2025,12 @@ const Sphere = () => {
                 pointerEvents: (currentFace === 2 && face2HintStep >= 2 && face2HintStep <= 4) ? 'auto' : 'none',
                 transformStyle: 'preserve-3d',
                 animation: (faceInputsVisible && currentFace === 2 && face2MessageFlipping) ? 'flipUp 0.6s ease-in-out' : 'none',
-                height: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? (face2HintStep === 4 ? '65px' : face2HintStep === 3 ? '55px' : '50px') : '36px',
+                height: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? (face2HintStep === 4 ? '60px' : face2HintStep === 3 ? '65px' : '60px') : '36px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 textAlign: 'center',
-                minWidth: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? (face2HintStep === 4 ? '320px' : face2HintStep === 3 ? '280px' : '250px') : '150px'
+                minWidth: (currentFace === 2 && (face2HintStep === 2 || face2HintStep === 3 || face2HintStep === 4)) ? (face2HintStep === 4 ? '300px' : face2HintStep === 3 ? '320px' : '280px') : '150px'
               }}>
                 {showTotalCalculation ? 'Add up all the face areas!' : 
                  faceInputsVisible ? 
