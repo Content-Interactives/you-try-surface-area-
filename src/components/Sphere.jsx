@@ -84,6 +84,7 @@ const Sphere = () => {
   const [showTotalCalculation, setShowTotalCalculation] = useState(false);
   const [totalSurfaceAreaInput, setTotalSurfaceAreaInput] = useState('');
   const [totalSurfaceAreaStatus, setTotalSurfaceAreaStatus] = useState(null); // 'correct' | 'incorrect' | null
+  const [totalSurfaceAreaHintVisible, setTotalSurfaceAreaHintVisible] = useState(false);
   // Highlight for Face-by-Face workflow
   const [focusedFace1, setFocusedFace1] = useState(false);
       // Highlight for Faces 2 & 3 (backwards L side)
@@ -1318,7 +1319,22 @@ const Sphere = () => {
                             >
                               Check
                             </button>
+                            <button
+                              className="px-2 py-1 bg-gray-500 text-white rounded text-xs hover:bg-gray-600"
+                              style={{ pointerEvents: 'auto' }}
+                              onClick={() => {
+                                // Toggle hint visibility for total surface area
+                                setTotalSurfaceAreaHintVisible(!totalSurfaceAreaHintVisible);
+                              }}
+                            >
+                              {totalSurfaceAreaHintVisible ? 'Hide' : 'Hint'}
+                            </button>
                           </div>
+                          {totalSurfaceAreaHintVisible && (
+                            <div className="mt-2 text-sm text-gray-600 font-medium">
+                              Add up all the face areas you calculated: 21 + 28 + 14 + 14 + 14 + 28 + 35 = ?
+                            </div>
+                          )}
                         </div>
                       ) : faceInputsVisible && (
                       <div className="space-y-2">
