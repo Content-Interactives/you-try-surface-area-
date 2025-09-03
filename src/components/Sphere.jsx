@@ -105,17 +105,88 @@ const Sphere = () => {
   ];
 
   useEffect(() => {
+    // Check if Proxima Nova font is loaded
+    const checkFontLoaded = () => {
+      if (document.fonts && document.fonts.check) {
+        const isLoaded = document.fonts.check('1em Proxima Nova');
+        if (isLoaded) {
+          document.querySelectorAll('.proxima-nova-title').forEach(el => {
+            el.classList.add('font-loaded');
+          });
+        }
+      }
+    };
+
+    // Check font loading status
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        checkFontLoaded();
+      });
+    } else {
+      // Fallback for browsers that don't support Font Loading API
+      setTimeout(checkFontLoaded, 1000);
+    }
+
     const style = document.createElement('style');
     style.textContent = `
       @font-face {
         font-family: 'Proxima Nova';
-        src: url('/fonts/ProximaNova-Regular.woff2') format('woff2');
+        src: url('/fonts/proximanova_regular.ttf') format('truetype');
         font-weight: normal;
         font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Proxima Nova';
+        src: url('/fonts/proximanova_bold.otf') format('opentype');
+        font-weight: bold;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Proxima Nova';
+        src: url('/fonts/proximanova_light.otf') format('opentype');
+        font-weight: 300;
+        font-style: normal;
+        font-display: swap;
       }
       /* Apply Proxima Nova globally */
       html, body, input, button, select, textarea, label, span, p, h1, h2, h3, h4, h5, h6 {
-        font-family: 'Proxima Nova', sans-serif !important;
+        font-family: 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+      }
+      /* Specific styling for the title */
+      .proxima-nova-title {
+        font-family: 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        line-height: 1.2;
+        margin-bottom: 0.5rem;
+      }
+      
+      /* Ensure the title specifically uses Proxima Nova */
+      h4.proxima-nova-title {
+        font-family: 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+        font-weight: 600 !important;
+        transition: font-family 0.3s ease;
+      }
+      
+      /* Font loading state */
+      .proxima-nova-title.font-loaded {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      
+      .proxima-nova-title:not(.font-loaded) {
+        opacity: 0.8;
+        transform: translateY(2px);
+      }
+      
+      /* Additional title styling */
+      .proxima-nova-title {
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
       }
       @keyframes fadeIn {
         from {
@@ -934,7 +1005,7 @@ const Sphere = () => {
       <Card className="w-full max-w-2xl mx-auto shadow-md bg-white" style={{ position: 'relative' }}>
         <div className="mobile-container" style={{ padding: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <h4 className="font-medium text-3xl mt-4" style={{ color: '#008542' }}>Surface Area: 3D Staircase</h4>
+            <h4 className="proxima-nova-title font-medium text-3xl mt-4" style={{ color: '#008542' }}>Surface Area: 3D Staircase</h4>
           </div>
 
           {isCustomShape && (
