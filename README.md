@@ -1,12 +1,41 @@
-# React + Vite
+# Surface Area Explorer Interactive
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository contains the code for the **Surface Area Explorer Interactive**, designed to help students explore and understand surface area of 3D shapes using engaging visuals and instant feedback.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ​ Live Interactive
 
-## Expanding the ESLint configuration
+Try it out here:  
+👉 https://content-interactives.github.io/you-try-surface-area-/
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## ​ Where This Interactive Is Being Used
+
+This interactive is currently featured in the following locations:
+
+- <img width="20" height="20" alt="image" src="https://github.com/user-attachments/assets/5d12571f-8e12-4441-98ab-c0bc94069a96" /> **CK-12 Intent Response**  
+  - 👉 PRODUCTION: [PENDING]  
+  - 👉 MASTER: [PENDING]
+- 📘 **CK-12 Flexbooks**
+  - 👉 [PENDING: Book/lesson link where this interactive appears]
+
+---
+
+## ​ Standards & Subjects
+
+This interactive aligns with the following topics and standards:
+
+- **📂 Subject Area**: Middle School Math (Grades 6–8)  
+- **🧮 Topic**: Surface Area of 3-Dimensional Shapes (prisms, pyramids, cylinders, etc.)  
+- **📏 Common Core**:  
+  [FILL_IN: Relevant standards like 7.G.B.6, etc.]
+
+---
+
+## ​​ Developer Notes
+
+- Built with: HTML, CSS, JavaScript  
+- Deployed via GitHub Pages  
+- See `index.html` and supporting assets in `js/` and `css/` folders  
